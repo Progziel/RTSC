@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "797780920359",
+    "project_id": "rtsc-518fc",
+    "storage_bucket": "rtsc-518fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797780920359:android:693d970c3c6912e153e602",
+        "android_client_info": {
+          "package_name": "com.example.boxing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797780920359-v9m321gebl5pt0tb4pm05qm3b12l48tg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD84El7k6H43o5tUmHDY7XE9wtYepdWcb8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "797780920359-v9m321gebl5pt0tb4pm05qm3b12l48tg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

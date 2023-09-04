@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:boxing/constants/colors.dart';
-import 'package:boxing/screens/auth/loginpage.dart';
+import 'package:boxing/screens/credential/loginpage.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
