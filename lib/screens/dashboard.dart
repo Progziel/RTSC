@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+  final String? userId;
+  const DashboardScreen({super.key, this.userId});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -19,6 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: screenlist[currentindex],
       backgroundColor: themeBackgroundcolor,
       persistentFooterAlignment: AlignmentDirectional.bottomEnd,
@@ -63,6 +65,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     const ChatscreenPage(),
     // const BoxersRecords(),
-    const ProfilePage()
+     ProfilePage(),
   ];
 }

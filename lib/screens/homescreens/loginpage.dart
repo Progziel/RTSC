@@ -1,4 +1,5 @@
 import 'package:boxing/constants/colors.dart';
+import 'package:boxing/global_var.dart';
 import 'package:boxing/screens/homescreens/fightinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
@@ -11,6 +12,8 @@ class Homescreenpage extends StatefulWidget {
 }
 
 class _HomescreenpageState extends State<Homescreenpage> {
+  final profilePictureLocalStorage = locator.read('profilePicture');
+
   int currentindex = 1;
   final PageController _pageController = PageController(
     initialPage: 1,
@@ -19,15 +22,56 @@ class _HomescreenpageState extends State<Homescreenpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppAssets.themeColor,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                color: AppAssets.primaryColor,
+                borderRadius: BorderRadius.circular(70),
+                image: DecorationImage(
+                    image: NetworkImage( profilePictureLocalStorage ??
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRudDbHeW2OobhX8E9fAY-ctpUAHeTNWfaqJA&usqp=CAU')
+                    ,fit: BoxFit.cover ),
+              )
+          ),
+        ),
+          actions: [
+            CircleAvatar(
+              backgroundColor: Color(0xff414141),
+              child: Icon(
+                Iconsax.notification,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            CircleAvatar(
+              backgroundColor: Color(0xff414141),
+              child: Icon(
+                Iconsax.search_favorite,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+          ],
+
+
+      ),
         backgroundColor: themeBackgroundcolor,
         body: Container(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  height: 40,
-                  color: themecolordark,
-                ),
+
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 2.1,
                   width: MediaQuery.of(context).size.width,
@@ -40,45 +84,8 @@ class _HomescreenpageState extends State<Homescreenpage> {
                         color: themecolordark,
                         child: Column(
                           children: [
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1IuCl8Z6KrqWnsGGivIYvvbZozrZ8wEF4Wg&usqp=CAU"),
-                                  ),
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundColor: Color(0xff414141),
-                                        child: Icon(
-                                          Iconsax.notification,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 15,
-                                      ),
-                                      CircleAvatar(
-                                        backgroundColor: Color(0xff414141),
-                                        child: Icon(
-                                          Iconsax.search_favorite,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
+
+
                             const Padding(
                               padding: EdgeInsets.only(left: 15, top: 20),
                               child: Row(

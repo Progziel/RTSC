@@ -4,7 +4,8 @@ import 'package:boxing/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class TermsandConditions extends StatefulWidget {
-  const TermsandConditions({super.key});
+  final String? userId;
+  const TermsandConditions({super.key, this.userId});
 
   @override
   State<TermsandConditions> createState() => _TermsandConditionsState();
@@ -76,7 +77,7 @@ class _TermsandConditionsState extends State<TermsandConditions> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const DashboardScreen()),
+                        builder: (context) =>  DashboardScreen(userId: widget.userId)),
                   );
                 },
                 child: Container(

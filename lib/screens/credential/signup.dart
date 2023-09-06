@@ -3,7 +3,8 @@ import 'package:boxing/classes/custom_text.dart';
 import 'package:boxing/classes/custom_textfield.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
-import 'package:boxing/models/new_user_model.dart';
+import 'package:boxing/global_var.dart';
+import 'package:boxing/models/user_model.dart';
 import 'package:boxing/screens/credential/loginpage.dart';
 import 'package:boxing/terms.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,17 +28,18 @@ class _UserInformationState extends State<UserInformation> {
   final _formKey2 = GlobalKey<FormState>();
 
   Future<void> signUp(context) async {
-    NewUser newUser = NewUser(
-        firstName: fNameController.text,
-        lastName: lNameController.text,
-        email: emailController.text,
-        password: passController.text,
-        phone: phoneController.text);
+    // UserModel newUser = UserModel(
+    //     firstName: fNameController.text,
+    //     lastName: lNameController.text,
+    //     email: emailController.text,
+    //     uid: ,
+    //     phone: phoneController.text);
+
 
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: newUser.email,
-        password: newUser.password,
+        email: emailController.text.trim(),
+        password: passController.text.trim(),
       );
       //log("${user.user} user added");
       if (userCredential != null) {
@@ -53,12 +55,16 @@ class _UserInformationState extends State<UserInformation> {
             "email": userCredential.user!.email,
             "firstName": fNameController.text,
             "lastName": lNameController.text,
-            "phone": phoneController.text
-          }).then((value) => toastMessage.showToastMessage('User added successfully')).catchError((error)=> toastMessage.showToastMessage('Something went wrong'));
+            "phone": phoneController.text,
+            "profilePicture": ""
+          }).then((value) => log('User added successfully')).catchError((error)=> log('Something went wrong'));
+
+          await locator.write('userId', userCredential.user?.uid);
+
           toastMessage.showToastMessage('User added successfully');
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const TermsandConditions()),
+            MaterialPageRoute(builder: (context) =>  TermsandConditions(userId: userCredential.user?.uid)),
           );
         } on FirebaseAuthException catch (e) {
           toastMessage.showToastMessage(e.code);
@@ -142,8 +148,9 @@ class _UserInformationState extends State<UserInformation> {
                 const SizedBox(
                   height: 10,
                 ),
-                CustomTextFormField(
+                CustomPassTextFormField(
                   hint: 'Password',
+                  obscureText: true,
                   controller: passController,
                   validator: (String? value) {
                     if (value!.length < 6) {

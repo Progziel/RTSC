@@ -2,8 +2,12 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:boxing/constants/colors.dart';
+import 'package:boxing/global_var.dart';
 import 'package:boxing/screens/onboard/onboardscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'screens/dashboard.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,14 +17,12 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final uId = locator.read('userId');
   @override
   void initState() {
     Timer.periodic(const Duration(seconds: 3), (timer) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const OnboardScreenPage()),
-        (Route<dynamic> route) => false,
-      );
+      uId != null ? Get.offAll(()=> DashboardScreen(userId:uId)) : Get.offAll(()=> OnboardScreenPage());
+
       timer.cancel();
     });
     // TODO: implement initState

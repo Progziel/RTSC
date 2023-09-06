@@ -1,13 +1,15 @@
 import 'dart:developer';
 
+import 'package:boxing/auth/google_signin.dart';
 import 'package:boxing/classes/custom_textfield.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
-import 'package:boxing/models/login_model.dart';
+import 'package:boxing/global_var.dart';
 import 'package:boxing/screens/credential/signup.dart';
 import 'package:boxing/terms.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -24,8 +26,8 @@ class _LoginPageState extends State<LoginPage> {
   ToastMessage toastMessage = ToastMessage();
 
   Future<void> signIn(context) async {
-    AuthWithUser userAuth = AuthWithUser(
-        email: emailController.text, password: passController.text);
+    // UserModel userAuth = UserModel(
+    //     email: emailController.text, password: passController.text);
 
     try {
       if (emailController.text.isNotEmpty && passController.text.isNotEmpty) {
@@ -38,12 +40,13 @@ class _LoginPageState extends State<LoginPage> {
 
         UserCredential userCredential =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: userAuth.email,
-          password: userAuth.password,
+          email: emailController.text.trim(),
+          password: passController.text.trim(),
         );
 
         if (userCredential.user != null) {
           toastMessage.showToastMessage("Login Successfully");
+          await locator.write('userId', userCredential.user?.uid);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const TermsandConditions()),
@@ -133,8 +136,9 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 20, bottom: 0),
-                child: CustomTextFormField(
+                child: CustomPassTextFormField(
                   controller: passController,
+                  obscureText: true,
                   hint: 'Password',
                   validator: (String? value) {
                     if (value!.length < 6) {
@@ -158,6 +162,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     signIn(context);
+
                   }
                 },
                 child: Container(
@@ -191,7 +196,14 @@ class _LoginPageState extends State<LoginPage> {
                 height: 30,
               ),
               MaterialButton(
-                onPressed: () {},
+                onPressed: () {
+
+                   GoogleAuth().googleSignIn;
+                   setState(() {
+
+                   });
+
+                },
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
