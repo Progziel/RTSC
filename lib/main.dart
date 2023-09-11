@@ -4,11 +4,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'dependencies/dependencies.dart';
 import 'firebase_options.dart';
 import 'splashscreen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDependencies();
 
   await GetStorage.init();
 

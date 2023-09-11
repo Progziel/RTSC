@@ -3,13 +3,13 @@ import 'package:boxing/classes/custom_text.dart';
 import 'package:boxing/classes/custom_textfield.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
-import 'package:boxing/global_var.dart';
-import 'package:boxing/models/user_model.dart';
+import 'package:boxing/controller/controller.dart';
+import 'package:boxing/models/auth_models/signup_model.dart';
 import 'package:boxing/screens/credential/loginpage.dart';
 import 'package:boxing/terms.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class UserInformation extends StatefulWidget {
   const UserInformation({super.key});
@@ -26,15 +26,9 @@ class _UserInformationState extends State<UserInformation> {
   TextEditingController passController = TextEditingController();
   ToastMessage toastMessage = ToastMessage();
   final _formKey2 = GlobalKey<FormState>();
+  UserController userController = Get.find<UserController>();
 
-  Future<void> signUp(context) async {
-    // UserModel newUser = UserModel(
-    //     firstName: fNameController.text,
-    //     lastName: lNameController.text,
-    //     email: emailController.text,
-    //     uid: ,
-    //     phone: phoneController.text);
-
+/*  Future<void> signUp(context) async {
 
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -45,52 +39,7 @@ class _UserInformationState extends State<UserInformation> {
       if (userCredential != null) {
         try {
 
-          // final userExists = await _checkUserExists(user.user!.uid);
-          // if (userExists) {
-          //   await docRef.doc().delete();
-          // }
-
-          await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid/*user.user!.uid*/).set({
-            "uid": userCredential.user!.uid,
-            "email": userCredential.user!.email,
-            "firstName": fNameController.text,
-            "lastName": lNameController.text,
-            "phone": phoneController.text,
-            "profilePicture": ""
-          }).then((value) => log('User added successfully')).catchError((error)=> log('Something went wrong'));
-
-          await locator.write('userId', userCredential.user?.uid);
-
-          toastMessage.showToastMessage('User added successfully');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) =>  TermsandConditions(userId: userCredential.user?.uid)),
-          );
-        } on FirebaseAuthException catch (e) {
-          toastMessage.showToastMessage(e.code);
-
-        }
-       // log("saved user ${userCredential.user!.email}");
-      }
-    } on FirebaseAuthException catch (e) {
-      toastMessage.showToastMessage(e.code);
-    }
-  }
-// Future<bool> _checkUserExists(String uid) async {
-//   final userDocs = await FirebaseFirestore.instance.collection('users').get();
-//
-//   final emailsToDelete = userDocs.docs.where((doc) => doc.data()['email'] == emailController.text.trim()).toList();
-//   if (emailsToDelete.isNotEmpty) {
-//     for (var doc in emailsToDelete) {
-//       await doc.reference.delete();
-//       print('User document deleted');
-//     }
-//     return true;
-//   }
-//
-//   print('${emailsToDelete.length} user documents deleted');
-//   return true;
-// }
+          await FirebaseFirestore.instance.collection('users').doc(userCredential.user?.uid*/
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +82,7 @@ class _UserInformationState extends State<UserInformation> {
                     if (value!.length < 11) {
                       return 'Please enter your 11 digit phone number';
                     }
-                    return null;
+                    return "";
                   },
                 ),
                 const SizedBox(
@@ -143,12 +92,12 @@ class _UserInformationState extends State<UserInformation> {
                   hint: 'Email',
                   controller: emailController,
                   validator: (String? input) =>
-                      input!.isValidEmail() ? null : "Invalid Email",
+                      input!.isValidEmail() ? "" : "Invalid Email",
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                CustomPassTextFormField(
+                CustomTextFormField(
                   hint: 'Password',
                   obscureText: true,
                   controller: passController,
@@ -156,16 +105,38 @@ class _UserInformationState extends State<UserInformation> {
                     if (value!.length < 6) {
                       return 'Please enter min 6 digit password';
                     }
-                    return null;
+                    return "";
                   },
                 ),
                 const SizedBox(
                   height: 30,
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
                     if (_formKey2.currentState!.validate()) {
-                      signUp(context);
+                    try{
+                      SignupModel signupModel = SignupModel(
+                        email: emailController.text.trim(),
+                        password: passController.text.trim(),
+                        roll_no: 3,
+                        first_name: fNameController.text.trim(),
+                        last_name: lNameController.text.trim(),
+                       // phoneController: phoneController.text.trim(),
+
+                      );
+                      final res = await userController.userSignup(signupModel);
+                      if(res.status == 200){
+                        toastMessage.showToastMessage(res.message ?? "");
+                        Get.to(()=> TermsandConditions());
+                      }
+                      else{
+                        toastMessage.showToastMessage(res.message ?? "");
+                      }
+                    }catch(e){
+                      toastMessage.showToastMessage("Something went wrong");
+                    }
+
+                     // signUp(context);
                     }
                   },
                   child: Container(

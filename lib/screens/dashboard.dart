@@ -1,26 +1,19 @@
 import 'package:boxing/constants/colors.dart';
-import 'package:boxing/screens/boxers/boxers.dart';
-import 'package:boxing/screens/homescreens/loginpage.dart';
 import 'package:boxing/screens/chatscreen/chatscreen.dart';
 import 'package:boxing/screens/newsarticles/newsarticle.dart';
 import 'package:boxing/screens/profile/profilepage.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-
 class DashboardScreen extends StatefulWidget {
   final String? userId;
   const DashboardScreen({super.key, this.userId});
-
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
-
 class _DashboardScreenState extends State<DashboardScreen> {
   int currentindex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: screenlist[currentindex],
       backgroundColor: themeBackgroundcolor,
       persistentFooterAlignment: AlignmentDirectional.bottomEnd,
@@ -30,10 +23,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         height: 80,
         color: Colors.white,
         child: Row(
-          children: [0, 1, 2]
+          children: [0, 1, 2, 3]
               .map((e) => Expanded(
-                      child: Center(
-                          child: IconButton(
+              child: Center(
+                  child: IconButton(
                     onPressed: () {
                       setState(() {
                         currentindex = e;
@@ -43,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       dashboardicons[e],
                       size: 25,
                       color:
-                          currentindex == e ? themepickcolor : Colors.grey[400],
+                      currentindex == e ? themepickcolor : Colors.grey[400],
                     ),
                   ))))
               .toList(),
@@ -51,20 +44,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
-
   List<IconData> dashboardicons = [
     Icons.home,
-
-    Iconsax.tag,
-    // Iconsax.profile_circle,
-    Iconsax.personalcard
+    Icons.article,
+    Icons.tag,
+    Icons.person
   ];
-
   List<Widget> screenlist = [
     const Homescreenpage(),
-
+    const NewsArticlesPage(),
     const ChatscreenPage(),
-    // const BoxersRecords(),
-     ProfilePage(),
+    const ProfilePage(),
   ];
 }

@@ -4,11 +4,15 @@ import 'package:boxing/auth/google_signin.dart';
 import 'package:boxing/classes/custom_textfield.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
+import 'package:boxing/controller/controller.dart';
 import 'package:boxing/global_var.dart';
+import 'package:boxing/models/auth_models/login_model.dart';
 import 'package:boxing/screens/credential/signup.dart';
+import 'package:boxing/screens/dashboard.dart';
 import 'package:boxing/terms.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
@@ -24,20 +28,12 @@ class _LoginPageState extends State<LoginPage> {
   bool showPassword = true;
   final _formKey = GlobalKey<FormState>();
   ToastMessage toastMessage = ToastMessage();
+  UserController userController = Get.find<UserController>();
 
-  Future<void> signIn(context) async {
-    // UserModel userAuth = UserModel(
-    //     email: emailController.text, password: passController.text);
+ /* Future<void> signIn(context) async {
 
     try {
       if (emailController.text.isNotEmpty && passController.text.isNotEmpty) {
-        // showDialog(
-        //    context: context,
-        //    barrierDismissible: false,
-        //    builder: (context) => const Center(
-        //      child: CircularProgressIndicator(),
-        //    ));
-
         UserCredential userCredential =
             await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
@@ -58,30 +54,10 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
     } on FirebaseAuthException catch (e) {
-      //   Navigator.pop(context);
       toastMessage.showToastMessage(e.code);
-      // showDialog(
-      //   context: context,
-      //   builder: (context) => AlertDialog(
-      //     title: Text(
-      //       "user are not exits",
-      //       textAlign: TextAlign.center,
-      //     ),
-      //     actions: [
-      //       Center(
-      //         child: ElevatedButton(
-      //           onPressed: () => Navigator.pop(context),
-      //           style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.black)),
-      //           child: const Text("Close"),
-      //         ),
-      //       )
-      //     ],
-      //   ),
-      // );
-
       log('user error $e');
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -125,18 +101,19 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding:  EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: CustomTextFormField(
+
                   controller: emailController,
                   hint: 'Email',
                   validator: (String? input) =>
-                      input!.isValidEmail() ? null : "Invalid Email",
+                      input!.isValidEmail() ? "" : "Invalid Email" ,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(
                     left: 20, right: 20, top: 20, bottom: 0),
-                child: CustomPassTextFormField(
+                child: CustomTextFormField(
                   controller: passController,
                   obscureText: true,
                   hint: 'Password',
@@ -144,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                     if (value!.length < 6) {
                       return 'Please enter min 6 digit password';
                     }
-                    return null;
+                    return "";
                   },
                 ),
               ),
@@ -159,11 +136,28 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               MaterialButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    signIn(context);
-
+                onPressed: () async{
+                  try{
+                    LoginModel loginModel = LoginModel(
+                      email: emailController.text.trim(),
+                      password: passController.text.trim(),
+                      roll_no: 3
+                    );
+                   final res =  await userController.loginUser(loginModel);
+                    if (_formKey.currentState!.validate()) {
+                      //  signIn(context);
+                      if(res.status == 200){
+                        toastMessage.showToastMessage(res.message ?? "");
+                        Get.to(()=> TermsandConditions());
+                      }
+                      else{
+                        toastMessage.showToastMessage(res.message ?? "");
+                      }
+                    }
+                  }catch(e){
+                    toastMessage.showToastMessage("Something went wrong");
                   }
+
                 },
                 child: Container(
                   decoration: BoxDecoration(

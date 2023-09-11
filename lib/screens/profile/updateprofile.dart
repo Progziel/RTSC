@@ -232,6 +232,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     child: SizedBox(
                         height: 50,
                         child: CustomTextFormField(
+                          hint: "First Name",
                           label: 'First Name',
                           controller: fnameController,
                         )),
@@ -241,6 +242,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     child: SizedBox(
                         height: 50,
                         child: CustomTextFormField(
+hint: "Last Name",
                           label: 'Last Name',
                           controller: lnameController,
                         )),
@@ -250,6 +252,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     child: SizedBox(
                         height: 50,
                         child: CustomTextFormField(
+                          hint: "Phone",
                           label: 'Phone',
                           controller: phoneController,
                         )),
@@ -260,6 +263,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                         height: 50,
                         child: CustomTextFormField(
                           label: 'Email',
+                          hint: "Email",
                           controller: emailController,
                         )),
                   ),
