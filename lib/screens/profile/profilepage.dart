@@ -1,4 +1,7 @@
+import 'package:boxing/classes/custom_toast.dart';
+import 'package:boxing/controller/controller.dart';
 import 'package:boxing/global_var.dart';
+import 'package:boxing/models/auth_models/logout_model.dart';
 import 'package:boxing/screens/credential/loginpage.dart';
 import 'package:boxing/screens/profile/updateprofile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +20,8 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final profilePictureLocalStorage = locator.read('profilePicture');
+  UserController userController = Get.find<UserController>();
+  ToastMessage toastMessage = ToastMessage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,10 +197,24 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             InkWell(
-              onTap: (){
-                FirebaseAuth.instance.signOut();
-                locator.remove('userId');
-                Get.offAll(()=> LoginPage());
+              onTap: ()async{
+
+                // FirebaseAuth.instance.signOut();
+
+                final res = await userController.logoutUser();
+              try{
+                if(res.status == 200){
+                  toastMessage.showToastMessage(res.message ?? "");
+                 await locator.remove('userId');
+                  Get.offAll(()=> LoginPage());
+                }
+                else{
+                  toastMessage.showToastMessage(res.message ?? "");
+                }
+              }catch(e){
+                toastMessage.showToastMessage("Something went wrong");
+              }
+
               },
               child: const ListTile(
                 leading: Icon(

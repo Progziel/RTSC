@@ -1,5 +1,5 @@
 import 'package:boxing/constants/colors.dart';
-import 'package:boxing/screens/homescreens/loginpage.dart';
+import 'package:boxing/screens/homescreens/home_screen.dart';
 import 'package:boxing/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 

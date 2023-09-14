@@ -1,126 +1,71 @@
 
+import 'package:boxing/models/dashboard_models/search_filter_body_model.dart';
+import 'package:boxing/models/dashboard_models/search_filter_model.dart';
+import 'package:boxing/models/profile/update_profile_model.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import '../api/api_constant.dart';
 import '../api/auth_api.dart';
+import '../api/dashboard_api.dart';
 import '../api/dio.dart';
 import '../models/auth_models/login_body_model.dart';
 import '../models/auth_models/login_model.dart';
+import '../models/auth_models/logout_body_model.dart';
+import '../models/auth_models/logout_model.dart';
 import '../models/auth_models/signup_body_model.dart';
 import '../models/auth_models/signup_model.dart';
+import '../models/dashboard_models/live_matches_body_model.dart';
+import '../models/profile/get_profile_model.dart';
+import '../models/profile/update_profile_body_model.dart';
 
 
 class UserController extends GetxController {
-  final signupApi = AuthApi(dio, baseUrl: ApiConstants.baseUrl);
+  RxBool loading = false.obs;
+  RxBool showCategories = true.obs;
+
+
+  final authApi = AuthApi(dio, baseUrl: ApiConstants.baseUrl);
+  //final dashboardApi = DashboardApi(dio, baseUrl: ApiConstants.baseUrl);
 
 
   Future<SignupBodyModel> userSignup(SignupModel signupModel) async {
-    final value = await signupApi.signupUser(signupModel);
+    final value = await authApi.signupUser(signupModel);
     return value;
   }
 
-  // Future<VerifyOtpBodyModel> verifyOtp(VerifyOtpModel verifyOtpModel)async{
-  //   final value = await signupApi.verifyOtp(verifyOtpModel);
-  //   return value;
-  // }
 
   Future<LoginBodyModel> loginUser(LoginModel loginModel)async{
-    final value = await signupApi.loginUser(loginModel);
+    final value = await authApi.loginUser(loginModel);
     return value;
   }
 
-  // Future<dynamic> resendOtp(ResendOtpModel resendOtpModel)async{
-  //   final value = await signupApi.resendOtp(resendOtpModel);
-  //   return value;
-  // }
-  // Future<VerifyOTPBodyModel> signupVerificationOTP(
-  //     VerifyOTPModel signUpOTP) async {
-  //   final signupApi = SignupApi(dio, baseUrl: ApiConstants.baseUrl);
-  //   final value = await signupApi.verifyOTP(signUpOTP);
-  //   return value;
-  // }
-  //
-  // Future<ResendOTPBodyModel> resendOTP(ResendOTPModel resendOTPModel) async {
-  //   final signupApi = SignupApi(dio, baseUrl: ApiConstants.baseUrl);
-  //
-  //   final value = await signupApi.resendOTP(resendOTPModel);
-  //   return value;
-  // }
-  //
-  // Future<LoginBodyModel> userLogIn(LoginModel loginModel) async {
-  //   String? deviceToken = await locator<FirebaseMessagingService>().getToken();
-  //   String? deviceName = await locator<DeviceInfoService>().getDeviceName();
-  //   String? deviceModel = await locator<DeviceInfoService>().getDeviceModel();
-  //   loginModel.device_token = deviceToken;
-  //   loginModel.device_name = deviceName;
-  //   loginModel.device_model = deviceModel;
-  //   final loginApi = LoginApi(dio, baseUrl: ApiConstants.baseUrl);
-  //   final value = await loginApi.loginUser(loginModel);
-  //   return value;
-  // }
-  //
-  // Future<ForgetPassBodyModel> forgetPass(
-  //     ForgetPassModel forgetPassModel) async {
-  //   final loginApi = LoginApi(dio, baseUrl: ApiConstants.baseUrl);
-  //
-  //   final value = await loginApi.forgetPassword(forgetPassModel);
-  //   return value;
-  // }
-  //
-  // Future<ResetPassBodyModel> resetPass(ResetPassModel resetPassModel) async {
-  //   final loginApi = LoginApi(dio, baseUrl: ApiConstants.baseUrl);
-  //
-  //   final value = await loginApi.resetPassword(resetPassModel);
-  //   return value;
-  // }
-  //
-  // //get profile is use to show the user info in profile screen
-  //
-  // Future<GetProfileModel> getProfile(String id) async {
-  //   final customerApi =
-  //   CustomerApi(dioInterceptor, baseUrl: ApiConstants.baseUrl);
-  //   final value = await customerApi.getProfile(id);
-  //   return value;
-  // }
-  //
-  // //update the given information of the user in edit profile screen
-  //
-  // Future<UpdateCustomerProfileBodyModel> updateProfile(
-  //     UpdateCustomerProfileModel updateCustomerProfileModel) async {
-  //   final customerApi =
-  //   CustomerApi(dioInterceptor, baseUrl: ApiConstants.baseUrl);
-  //   final value = await customerApi.updateProfile(updateCustomerProfileModel);
-  //   return value;
-  // }
-  //
-  // //set the profile image of the user
-  //
-  // Future<SetProfileImageBodyModel> setProfileImage(
-  //     String setProfileImage, file) async {
-  //   final customerApi =
-  //   CustomerApi(dioInterceptor, baseUrl: ApiConstants.baseUrl);
-  //   final value = await customerApi.setProfileImage(setProfileImage, file);
-  //   return value;
-  // }
-  //
-  // Future<LogoutBodyModel> logoutUser(LogoutModel logoutModel) async {
-  //   final loginApi = LoginApi(dio, baseUrl: ApiConstants.baseUrl);
-  //
-  //   final value = await loginApi.logoutUser(logoutModel);
-  //   return value;
-  // }
-  //
-  // //Employee Part
-  // Future<CheckEmployeeModel> checkEmp(String dynamics_emp_id) async {
-  //   final employeeApi = EmployeeApi(dio, baseUrl: ApiConstants.baseUrl);
-  //   final value = await employeeApi.checkEmployee(dynamics_emp_id);
-  //   return value;
-  // }
-  //
-  // Future<SetupEmpAccBodyModel> setupEmpAcc(
-  //     SetupEmpAccModel setupEmpAccModel) async {
-  //   final employeeApi = EmployeeApi(dio, baseUrl: ApiConstants.baseUrl);
-  //   final value = await employeeApi.setupEmpAcc(setupEmpAccModel);
-  //   return value;
-  // }
+
+  Future<LogoutBodyModel> logoutUser() async {
+    final value = await authApi.logoutUser();
+    return value;
+  }
+
+  ///Dashboard
+  Future<LiveMatchesBodyModel> liveMatchesData()async {
+    final value = await authApi.liveMatches();
+    return value;
+  }
+
+  ///profile
+  Future<GetProfileBodyModel> getProfile()async{
+    final value = await authApi.getProfile();
+    return value;
+  }
+
+  Future<UpdateProfileBodyModel> updateProfile(UpdateProfileModel updateProfileModel)async{
+    final res = await authApi.updateProfile(updateProfileModel);
+    return res;
+  }
+
+  Future<SearchFilerBodyModel> search (SearchFilterModel searchFilterModel)async{
+    final res = await authApi.searchFilter(searchFilterModel);
+    return res;
+  }
+
 }

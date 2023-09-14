@@ -4,6 +4,7 @@ import 'package:boxing/classes/custom_textfield.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/controller/controller.dart';
+import 'package:boxing/global_var.dart';
 import 'package:boxing/models/auth_models/signup_model.dart';
 import 'package:boxing/screens/credential/loginpage.dart';
 import 'package:boxing/terms.dart';
@@ -82,7 +83,7 @@ class _UserInformationState extends State<UserInformation> {
                     if (value!.length < 11) {
                       return 'Please enter your 11 digit phone number';
                     }
-                    return "";
+                    return null;
                   },
                 ),
                 const SizedBox(
@@ -92,7 +93,7 @@ class _UserInformationState extends State<UserInformation> {
                   hint: 'Email',
                   controller: emailController,
                   validator: (String? input) =>
-                      input!.isValidEmail() ? "" : "Invalid Email",
+                      input!.isValidEmail() ? null : "Invalid Email",
                 ),
                 const SizedBox(
                   height: 10,
@@ -105,7 +106,7 @@ class _UserInformationState extends State<UserInformation> {
                     if (value!.length < 6) {
                       return 'Please enter min 6 digit password';
                     }
-                    return "";
+                    return null;
                   },
                 ),
                 const SizedBox(
@@ -127,7 +128,12 @@ class _UserInformationState extends State<UserInformation> {
                       final res = await userController.userSignup(signupModel);
                       if(res.status == 200){
                         toastMessage.showToastMessage(res.message ?? "");
+                        await locator.write('userId', res.data?.id);
+
                         Get.to(()=> TermsandConditions());
+                      }
+                      else if(res.message == 401){
+                        toastMessage.showToastMessage(res.message ?? "");
                       }
                       else{
                         toastMessage.showToastMessage(res.message ?? "");

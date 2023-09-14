@@ -14,12 +14,12 @@ class SignupBodyModel {
 
 @JsonSerializable()
 class Data {
-  String? userId;
+  String? id;
   String? name;
   String? email;
   String? rollNo;
 
-  Data({this.name,this.email,this.userId,this.rollNo});
+  Data({this.name,this.email,this.id,this.rollNo});
 
   factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
   Map<String, dynamic> toJson() => _$DataToJson(this);

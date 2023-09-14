@@ -1,19 +1,16 @@
-import 'dart:developer';
 
 import 'package:boxing/auth/google_signin.dart';
 import 'package:boxing/classes/custom_textfield.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/controller/controller.dart';
-import 'package:boxing/global_var.dart';
 import 'package:boxing/models/auth_models/login_model.dart';
 import 'package:boxing/screens/credential/signup.dart';
-import 'package:boxing/screens/dashboard.dart';
 import 'package:boxing/terms.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../global_var.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -107,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: emailController,
                   hint: 'Email',
                   validator: (String? input) =>
-                      input!.isValidEmail() ? "" : "Invalid Email" ,
+                      input!.isValidEmail() ? null : "Invalid Email" ,
                 ),
               ),
               Padding(
@@ -121,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                     if (value!.length < 6) {
                       return 'Please enter min 6 digit password';
                     }
-                    return "";
+                    return null;
                   },
                 ),
               ),
@@ -148,7 +145,12 @@ class _LoginPageState extends State<LoginPage> {
                       //  signIn(context);
                       if(res.status == 200){
                         toastMessage.showToastMessage(res.message ?? "");
+                        await locator.write('userId', res.id);
+
                         Get.to(()=> TermsandConditions());
+                      }
+                      else if(res.status == 401){
+                        toastMessage.showToastMessage(res.message ?? "");
                       }
                       else{
                         toastMessage.showToastMessage(res.message ?? "");

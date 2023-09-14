@@ -1,50 +1,29 @@
-// import 'package:boxing/classes/custom_text.dart';
-// import 'package:flutter/material.dart';
-//
-// class CustomButton extends StatelessWidget {
-//   final Function()? onPressed;
-//   final String? title;
-//
-//   const CustomButton({
-//     this.onPressed,
-//     required this.title,
-//     super.key,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return ElevatedButton(
-//         style: const ButtonStyle(backgroundColor: MaterialStatePropertyAll(Colors.black)),
-//         onPressed: onPressed ?? () => Navigator.pop(context),
-//         child: Text(
-//           title ?? "OK",
-//           style: const TextStyle(
-//             fontSize: 18,
-//           ),
-//         ));
-//   }
-// }
-//
-// Widget customButton({List<Color>? colorList, Color? borderColor, text, textColor, fSize,fontWeight, required Function()? onTap}) {
-//   return InkWell(
-//     onTap: onTap ?? () {},
-//     child: Container(
-//       alignment: Alignment.center,
-//       height: 55,
-//       width: Get.width,
-//       decoration: BoxDecoration(
-//           borderRadius: BorderRadius.circular(15),
-//           gradient: LinearGradient(
-//               colors: colorList ?? []),
-//         //  color: btnColor,
-//           border: Border.all(color: borderColor ?? Colors.black)),
-//       child: CustomTextWidget(
-//         text: text,
-//         fontSize: fSize,
-//         fontWeight: fontWeight,
-//         textColor: textColor
-//
-//       ),
-//     ),
-//   );
-// }
+import 'package:flutter/material.dart';
+class CustomButton extends StatelessWidget {
+  final String buttonText;
+  final VoidCallback onTap;
+  final double width;
+  const CustomButton(
+      {super.key,
+        required this.buttonText,
+        required this.onTap,
+        this.width = double.infinity});
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+          height: 50,
+          width: width,
+          decoration: BoxDecoration(
+              color: const Color(0xffFF0007),
+              borderRadius: BorderRadius.circular(12)),
+          child: Center(
+              child: Text(
+                buttonText,
+                style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold),
+              ))),
+    );
+  }
+}

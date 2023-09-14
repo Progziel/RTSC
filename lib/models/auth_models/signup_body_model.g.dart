@@ -25,12 +25,12 @@ Map<String, dynamic> _$SignupBodyModelToJson(SignupBodyModel instance) =>
 Data _$DataFromJson(Map<String, dynamic> json) => Data(
       name: json['name'] as String?,
       email: json['email'] as String?,
-      userId: json['userId'] as String?,
+      id: json['id'] as String?,
       rollNo: json['rollNo'] as String?,
     );
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'userId': instance.userId,
+      'id': instance.id,
       'name': instance.name,
       'email': instance.email,
       'rollNo': instance.rollNo,
