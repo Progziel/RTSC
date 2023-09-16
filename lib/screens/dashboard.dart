@@ -5,60 +5,100 @@ import 'package:boxing/screens/chatscreen/chatscreen.dart';
 import 'package:boxing/screens/homescreens/home_screen.dart';
 import 'package:boxing/screens/newsarticles/newsarticle.dart';
 import 'package:boxing/screens/profile/profilepage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-class DashboardScreen extends StatefulWidget {
-  final String? userId;
-  const DashboardScreen({super.key, this.userId});
-  @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
-}
-class _DashboardScreenState extends State<DashboardScreen> {
-  int currentindex = 0;
 
+
+
+class BottomBar extends StatefulWidget {
+  const BottomBar({
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<BottomBar> createState() => _BottomBarState();
+}
+class _BottomBarState extends State<BottomBar> {
+  int _selectedIndex = 0;
+  late List<Widget> _widgetOptions;
+  late List<BottomNavigationBarItem> _bottomNavBarItems;
+  bool isDriver = true;
+  @override
+  void initState() {
+    super.initState();
+    _widgetOptions = <Widget>[
+      const Homescreenpage(),
+      const NewsArticlesPage(),
+      const ChatscreenPage(),
+      const ProfilePage(),
+    ];
+    _bottomNavBarItems = const [
+      BottomNavigationBarItem(
+          icon: Icon(
+            CupertinoIcons.home,
+            color: Colors.black26,
+          ),
+          activeIcon: Icon(
+            CupertinoIcons.house_fill,
+            color: Colors.black,
+          ),
+          label: ''),
+      BottomNavigationBarItem(
+          icon: Icon(
+            CupertinoIcons.square_list,
+            color: Colors.black26,
+          ),
+          activeIcon: Icon(
+            CupertinoIcons.square_list_fill,
+            color: Colors.black,
+          ),
+          label: ''),
+      BottomNavigationBarItem(
+          icon: Icon(
+            CupertinoIcons.tag,
+            color: Colors.black26,
+          ),
+          activeIcon: Icon(
+            CupertinoIcons.tag_fill,
+            color: Colors.black,
+          ),
+          label: ''),
+      BottomNavigationBarItem(
+          icon: Icon(
+            CupertinoIcons.person,
+            color: Colors.black26,
+          ),
+          activeIcon: Icon(
+            CupertinoIcons.person_fill,
+            color: Colors.black,
+          ),
+          label: ''),
+    ];
+    _selectedIndex = 0;
+  }
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screenlist[currentindex],
-      backgroundColor: themeBackgroundcolor,
-      persistentFooterAlignment: AlignmentDirectional.bottomEnd,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        width: MediaQuery.of(context).size.width,
-        height: 80,
-        color: Colors.white,
-        child: Row(
-          children: [0, 1, 2, 3]
-              .map((e) => Expanded(
-              child: Center(
-                  child: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        currentindex = e;
-                      });
-                    },
-                    icon: Icon(
-                      dashboardicons[e],
-                      size: 25,
-                      color:
-                      currentindex == e ? themepickcolor : Colors.grey[400],
-                    ),
-                  ))))
-              .toList(),
-        ),
+
+      body: Center(
+        child: _widgetOptions[_selectedIndex],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: _onItemTapped,
+        currentIndex: _selectedIndex,
+        elevation: 10,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.blueGrey,
+        type: BottomNavigationBarType.fixed,
+        items: _bottomNavBarItems,
       ),
     );
   }
-  List<IconData> dashboardicons = [
-    Icons.home,
-    Icons.article,
-    Icons.tag,
-    Icons.person
-  ];
-  List<Widget> screenlist = [
-    const Homescreenpage(),
-    const NewsArticlesPage(),
-    const ChatscreenPage(),
-    const ProfilePage(),
-  ];
 }

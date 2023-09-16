@@ -36,6 +36,7 @@ class CustomTextFormField extends StatelessWidget {
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black, width: 1.5),
         ),
+        floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
     );
     // return TextFormField(

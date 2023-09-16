@@ -77,7 +77,7 @@ class _TermsandConditionsState extends State<TermsandConditions> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>  DashboardScreen(userId: widget.userId)),
+                        builder: (context) =>  BottomBar()),
                   );
                 },
                 child: Container(

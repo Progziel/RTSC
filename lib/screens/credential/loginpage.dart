@@ -4,6 +4,7 @@ import 'package:boxing/classes/custom_textfield.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/controller/controller.dart';
+import 'package:boxing/models/auth_models/login_body_model.dart';
 import 'package:boxing/models/auth_models/login_model.dart';
 import 'package:boxing/screens/credential/signup.dart';
 import 'package:boxing/terms.dart';
@@ -134,13 +135,15 @@ class _LoginPageState extends State<LoginPage> {
               ),
               MaterialButton(
                 onPressed: () async{
+
                   try{
                     LoginModel loginModel = LoginModel(
-                      email: emailController.text.trim(),
-                      password: passController.text.trim(),
-                      roll_no: 3
+                        email: emailController.text.trim(),
+                        password: passController.text.trim(),
+                        roll_no: 3
                     );
-                   final res =  await userController.loginUser(loginModel);
+                     final res =  await userController.loginUser(loginModel);
+
                     if (_formKey.currentState!.validate()) {
                       //  signIn(context);
                       if(res.status == 200){
@@ -157,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                       }
                     }
                   }catch(e){
-                    toastMessage.showToastMessage("Something went wrong");
+                    toastMessage.showToastMessage("Please try again");
                   }
 
                 },

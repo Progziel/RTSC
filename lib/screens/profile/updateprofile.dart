@@ -7,6 +7,8 @@ import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/controller/controller.dart';
 import 'package:boxing/global_var.dart';
+import 'package:boxing/models/profile/get_profile_model.dart';
+import 'package:boxing/models/profile/set_profile_image_body_model.dart';
 import 'package:boxing/models/profile/update_profile_model.dart';
 import 'package:boxing/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,6 +38,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   final ImagePicker picker = ImagePicker();
   UserController userController = Get.find<UserController>();
   final profilePictureLocalStorage = locator.read('profilePicture');
+  String imgBaseUrl = 'http://192.168.1.120:8000';
 
   String? getImage;
 
@@ -43,7 +46,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
     final res = await userController.getProfile();
     try {
       if (res.status == 200) {
-        //   getImage = res.data?.image ?? "";
+        getImage = res.user?.image ?? "";
         fnameController =
             TextEditingController(text: "${res.user?.first_name}");
         lnameController = TextEditingController(text: res.user?.last_name);
@@ -64,34 +67,33 @@ class _UpdateProfileState extends State<UpdateProfile> {
   }
 
 
-  /* Future<SetProfileImageBodyModel?> setProfileImage() async {
+   Future<SetProfileImageBodyModel?> setProfileImage() async {
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       userController.image.value = image;
       final value = await userController.setProfileImage(
-        widget.customerId,
         File(image.path),
       );
       try {
         if (value.status == 200) {
-          snackBarWidget(value.message);
+          toastMessage.showToastMessage(value.message ?? "");
         } else {
-          snackBarWidget(value.message);
+          toastMessage.showToastMessage(value.message ?? "");
         }
       } catch (e) {
-        snackBarWidget('Something went wrong.');
+        toastMessage.showToastMessage('Something went wrong.');
       }
       return value;
     }
     return null;
   }
-*/
   @override
   void initState() {
     super.initState();
     getData();
+    profilePictureLocalStorage;
     /*fetchUserData();
-    profilePictureLocalStorage;*/
+    ;*/
   }
 
 /*
@@ -247,43 +249,29 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       const SizedBox(
                         height: 10,
                       ),
+
                       SizedBox(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Stack(
                               children: [
-                                Container(
-                                  height: 100,
-                                  width: 100,
-                                  decoration: BoxDecoration(
-                                      color: AppAssets.primaryColor,
-                                      borderRadius: BorderRadius.circular(50),
-                                      image: const DecorationImage(
-                                          image: NetworkImage(
-                                              /*profilePictureLocalStorage ?? (latestProfile?.isNotEmpty ?? false
-                                  ? latestProfile ?? ""
-                                  : */
-                                              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRudDbHeW2OobhX8E9fAY-ctpUAHeTNWfaqJA&usqp=CAU' /*)*/
-                                              ),
-                                          fit: BoxFit.cover)),
-                                ),
+                                _getProfileImage(),
                                 Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: InkWell(
-                                      onTap: () {
-                                        //   setProfilePicturePath();
-                                      },
-                                      child: const CircleAvatar(
-                                        radius: 20,
-                                        backgroundColor: AppAssets.themeColor,
-                                        child: Icon(
-                                          Icons.cameraswitch_outlined,
-                                          color: AppAssets.backgroundColor,
-                                        ),
-                                      ),
-                                    ))
+                                  bottom: 0,
+                                  right: 0,
+                                  child: InkWell(
+                                    onTap: () {
+                                      setProfileImage();
+                                    },
+                                    child: CircleAvatar(
+                                        maxRadius: 15,
+                                        backgroundColor:
+                                        AppAssets.primaryColor,
+                                        child:Icon(Icons.edit,color: Colors.white,)
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(
@@ -363,5 +351,43 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 : const Center(
                     child: CircularProgressIndicator(),
                   )));
+  }
+  Widget _getProfileImage() {
+    if (userController.image.value != null) {
+      return Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              image: DecorationImage(
+                image: FileImage(
+                  File(userController.image.value!.path),
+                ),
+                fit: BoxFit.cover,
+              )));
+    } else if (getImage != null) {
+      return Container(
+        height: 100,
+        width: 100,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            image: DecorationImage(
+                image: NetworkImage(
+                  '$imgBaseUrl$getImage',
+                ),
+                fit: BoxFit.cover)),
+      );
+    } else {
+      return Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              image: const DecorationImage(
+                  image: AssetImage(
+                    'assets/icons/user.png',
+                  ),
+                  fit: BoxFit.cover)));
+    }
   }
 }

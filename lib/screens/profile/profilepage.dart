@@ -219,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: const ListTile(
                 leading: Icon(
                   Iconsax.logout,
-                  color: Color(0xffFF0007),
+                  color: Color(0xff38219f),
                 ),
                 title: Text("Log Out"),
                 trailing: Icon(

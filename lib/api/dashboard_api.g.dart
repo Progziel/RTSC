@@ -13,7 +13,7 @@ class _DashboardApi implements DashboardApi {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://192.168.1.113:8000/api';
+    baseUrl ??= 'http://192.168.1.120:8000/api';
   }
 
   final Dio _dio;

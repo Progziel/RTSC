@@ -4,8 +4,8 @@ part 'search_filter_model.g.dart';
 
 @JsonSerializable()
 class SearchFilterModel {
-  String? categories;
-  SearchFilterModel({this.categories});
+  String? matchLogCategoriesID;
+  SearchFilterModel({this.matchLogCategoriesID});
 
   factory SearchFilterModel.fromJson(Map<String, dynamic> json) =>
       _$SearchFilterModelFromJson(json);

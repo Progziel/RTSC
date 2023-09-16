@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer.periodic(const Duration(seconds: 3), (timer) {
-      uId != null ? Get.offAll(()=> DashboardScreen(userId:uId)) : Get.offAll(()=> OnboardScreenPage());
+      uId != null ? Get.offAll(()=> BottomBar()) : Get.offAll(()=> OnboardScreenPage());
 
       timer.cancel();
     });

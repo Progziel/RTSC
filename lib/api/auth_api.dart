@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:boxing/models/dashboard_models/fighter_detail_body_model.dart';
+import 'package:boxing/models/dashboard_models/fighter_detail_model.dart';
 import 'package:boxing/models/profile/update_profile_model.dart';
 import 'package:dio/dio.dart';
 
@@ -6,13 +10,14 @@ import 'package:retrofit/http.dart';
 import '../models/auth_models/login_body_model.dart';
 import '../models/auth_models/login_model.dart';
 import '../models/auth_models/logout_body_model.dart';
-import '../models/auth_models/logout_model.dart';
 import '../models/auth_models/signup_body_model.dart';
 import '../models/auth_models/signup_model.dart';
+import '../models/dashboard_models/latest_news_body_model.dart';
 import '../models/dashboard_models/live_matches_body_model.dart';
 import '../models/dashboard_models/search_filter_body_model.dart';
 import '../models/dashboard_models/search_filter_model.dart';
 import '../models/profile/get_profile_model.dart';
+import '../models/profile/set_profile_image_body_model.dart';
 import '../models/profile/update_profile_body_model.dart';
 import 'api_constant.dart';
 
@@ -35,7 +40,7 @@ abstract class AuthApi {
   Future<LogoutBodyModel> logoutUser();
 
   /// Dashboard
-  @GET('/livematchesview')
+  @GET('/matchlogview')
   Future<LiveMatchesBodyModel> liveMatches();
 
   /// Profile
@@ -47,6 +52,18 @@ abstract class AuthApi {
 
 @POST('/livematchessearch')
   Future<SearchFilerBodyModel> searchFilter (@Body() SearchFilterModel searchFilterModel);
+
+
+  @POST('/imageupload')
+  Future<SetProfileImageBodyModel> setProfileImage (@Part() File file);
+
+  @GET('/latestnewsview')
+  Future<LatestNewsBodyModel> getLatestNews();
+
+
+  @POST('/fighterprofilesview')
+  Future<FighterDetailBodyModel> fighterDetail(@Body() FighterDetailModel fighterDetailModel);
+
 
 // @POST('/users/resend-otp')
   // Future<dynamic> resendOtp(@Body() ResendOtpModel resendOtpModel);

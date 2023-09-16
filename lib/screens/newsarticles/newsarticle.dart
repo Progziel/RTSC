@@ -2,6 +2,7 @@ import 'package:boxing/classes/custom_text.dart';
 import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/controller/controller.dart';
+import 'package:boxing/models/dashboard_models/latest_news_body_model.dart';
 import 'package:boxing/models/dashboard_models/search_filter_body_model.dart';
 import 'package:boxing/models/dashboard_models/search_filter_model.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,33 @@ class NewsArticlesPage extends StatefulWidget {
 }
 
 class _NewsArticlesPageState extends State<NewsArticlesPage> {
-  String imgBaseUrl = 'http://192.168.1.113:8000';
+  String imgBaseUrl = 'http://192.168.1.120:8000';
 
   SearchFilerBodyModel? res;
   ToastMessage toastMessage = ToastMessage();
   UserController userController = Get.find<UserController>();
   List<CategoriesList> filteredItems = [];
   TextEditingController _searchController = TextEditingController();
+  List<LatestNewsData> latestNewsData = [];
+
+
+  Future<void> latestNews()async{
+    final res = await userController.getLatestNews();
+   try{
+     if(res.status == 200){
+       latestNewsData = res.data ?? [];
+       setState(() {
+
+       });
+     }
+     else{
+       toastMessage.showToastMessage(res.message ?? "");
+     }
+   }catch(e){
+     toastMessage.showToastMessage('Something went wrong');
+
+   }
+  }
 
   int selectedIdx = -1;
   List<CategoriesList> category = [
@@ -42,20 +63,20 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
 
   void _filterSearchResults(String query) {
     List<CategoriesList> searchResults = category
-        .where((item) =>
-        item.name.toLowerCase().contains(query.toLowerCase()))
+        .where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
         .toList();
 
     setState(() {
       filteredItems = searchResults;
     });
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-      filteredItems = category;
-
+    filteredItems = category;
+    latestNews();
   }
 
   @override
@@ -144,21 +165,25 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
-                                  onTap: ()async{
-                                    SearchFilterModel searchFilter = SearchFilterModel(
-                                      categories:filteredItems[index].name
-                                    );
-                                     res = await userController.search(searchFilter);
-                                  try{
-                                    if(res?.status == 200){
-                                      toastMessage.showToastMessage(res?.message ?? "");
+                                  onTap: () async {
+                                    SearchFilterModel searchFilter =
+                                        SearchFilterModel(
+                                            matchLogCategoriesID:
+                                                filteredItems[index].name);
+                                    res = await userController
+                                        .search(searchFilter);
+                                    try {
+                                      if (res?.status == 200) {
+                                        // toastMessage.showToastMessage(
+                                        //     res?.message ?? "");
+                                      } else {
+                                        toastMessage.showToastMessage(
+                                            res?.message ?? "");
+                                      }
+                                    } catch (e) {
+                                      toastMessage.showToastMessage(
+                                          "Something went wrong");
                                     }
-                                    else{
-                                      toastMessage.showToastMessage(res?.message ?? "");
-                                    }
-                                  }catch(e){
-                                    toastMessage.showToastMessage("Something went wrong");
-                                  }
 
                                     setState(() {
                                       selectedIdx = index;
@@ -167,14 +192,16 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
                                   child: Container(
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: index == selectedIdx ? AppAssets.primaryColor : null,
+                                      color: index == selectedIdx
+                                          ? AppAssets.primaryColor
+                                          : null,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     height: 40,
                                     child: Center(
                                       child: CustomTextWidget(
-                                       text: filteredItems[index].name,textColor: Colors.white,
-
+                                        text: filteredItems[index].name,
+                                        textColor: Colors.white,
                                       ),
                                     ),
                                   ),
@@ -189,138 +216,158 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
               const SizedBox(
                 height: 10,
               ),
-  if (res?.status ==
-      200) // Display data when the response status is 200.
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Container(
-        height: 300,
-        decoration: BoxDecoration(
-          color: themeBackgroundcolor,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
+              res?.status == 200 && res?.data?.isNotEmpty == true
+                  ? // Display data when the response status is 200.
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Container(
+                        height: 300,
+                        decoration: BoxDecoration(
+                          color: themeBackgroundcolor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                      ),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            '${imgBaseUrl}${res?.data?[0].t1_image ?? ''}'),
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(12),
+                                      ),
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                            '${imgBaseUrl}${res?.data?[0].t2_image ?? ''}'),
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              color: themecolordark,
+                              height: 30,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        '${res?.data?[0].t1_team_name ?? ''} ${res?.data?[0].t1_score}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "V/S",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      child: Center(
+                                        child: Text(
+                                          '${res?.data?[0].t2_team_name ?? ''} ${res?.data?[0].t2_score}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              "${res?.data?[0].date ?? ''}",
+                              style: TextStyle(
+                                color: themecolordark,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "${res?.data?[0].day ?? ''}",
+                              style: TextStyle(
+                                color: themecolordark,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              "${res?.data?[0].time ?? ''}",
+                              style: TextStyle(
+                                color: themecolordark,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: CustomButton(
+                                buttonText: 'View Fight Info',
+                                onTap: () {
+                                  // Handle the button tap action here.
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            '${imgBaseUrl}${res?.data?[0].t1_image ?? ''}'),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(12),
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            '${imgBaseUrl}${res?.data?[0].t2_image ?? ''}'),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              color: themecolordark,
-              height: 30,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        '${res?.data?[0].t1_team_name ?? ''} ${res?.data?[0].t1_score}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    )
+                  :
+                  // Display a placeholder or message when data is not available.
+
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Container(
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: themeBackgroundcolor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: CustomTextWidget(
+                            text: "No data found",
+                            textColor: AppAssets.primaryColor,
+                          )
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                          color: Colors.red,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "V/S",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      child: Center(
-                        child: Text(
-                          '${res?.data?[0].t2_team_name ?? ''} ${res?.data?[0].t2_score}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              "${res?.data?[0].date ?? ''}",
-              style: TextStyle(
-                color: themecolordark,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "${res?.data?[0].day ?? ''}",
-              style: TextStyle(
-                color: themecolordark,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "${res?.data?[0].time ?? ''}",
-              style: TextStyle(
-                color: themecolordark,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomButton(
-                buttonText: 'View Fight Info',
-                onTap: () {
-                  // Handle the button tap action here.
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    ),
 
               // SizedBox(
               //   height: 250,
@@ -410,7 +457,8 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
                     padding: EdgeInsets.only(left: 15, top: 10),
                     child: Text(
                       "Latest News",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                 ],
@@ -418,11 +466,12 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
               SizedBox(
                 height: 1000,
                 child: ListView.builder(
-                    itemCount: 10,
+                    itemCount: latestNewsData.length,
                     padding: const EdgeInsets.all(0),
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
+                      final news = latestNewsData[index];
                       return Padding(
                         padding:
                             const EdgeInsets.only(left: 10, right: 20, top: 10),
@@ -437,18 +486,16 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
                                     height: 130,
                                     width: 120,
                                     child: Image.network(
-                                      index.isOdd
-                                          ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSabJteOeBo_3dLUA6tIR-G6zOODis6Lho-eA&usqp=CAU"
-                                          : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRifH9dTn7DKhOjhf9yB_n3gjEulOcIeWzeg&usqp=CAU",
+                                      '$imgBaseUrl${news.image ?? '' }',
                                       fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),
-                                const Expanded(
+                                 Expanded(
                                     child: Column(
                                   children: [
                                     Text(
-                                      "Arsenal Fresh \$70m Caicedo bid rejected by brighton",
+                                      news.title ?? "",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18),
@@ -459,7 +506,7 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
                                     Row(
                                       children: [
                                         Text(
-                                          "Sky Sports",
+                                          news.news_name ?? "",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.grey,
@@ -473,7 +520,7 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
                                           color: Colors.grey,
                                         ),
                                         Text(
-                                          "12 h",
+                                          news.date ?? "",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.grey,
@@ -496,7 +543,7 @@ class _NewsArticlesPageState extends State<NewsArticlesPage> {
   }
 }
 
-class CategoriesList{
+class CategoriesList {
   final String name;
   const CategoriesList({required this.name});
 }

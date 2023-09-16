@@ -13,7 +13,7 @@ class _AuthApi implements AuthApi {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://192.168.1.113:8000/api';
+    baseUrl ??= 'http://192.168.1.120:8000/api';
   }
 
   final Dio _dio;
@@ -105,7 +105,7 @@ class _AuthApi implements AuthApi {
     )
             .compose(
               _dio.options,
-              '/livematchesview',
+              '/matchlogview',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -182,6 +182,83 @@ class _AuthApi implements AuthApi {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = SearchFilerBodyModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SetProfileImageBodyModel> setProfileImage(file) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    _data.files.add(MapEntry(
+      'file',
+      MultipartFile.fromFileSync(
+        file.path,
+        filename: file.path.split(Platform.pathSeparator).last,
+      ),
+    ));
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<SetProfileImageBodyModel>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/imageupload',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = SetProfileImageBodyModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<LatestNewsBodyModel> getLatestNews() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<LatestNewsBodyModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/latestnewsview',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = LatestNewsBodyModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<FighterDetailBodyModel> fighterDetail(fighterDetailModel) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(fighterDetailModel.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<FighterDetailBodyModel>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/fighterprofilesview',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = FighterDetailBodyModel.fromJson(_result.data!);
     return value;
   }
 

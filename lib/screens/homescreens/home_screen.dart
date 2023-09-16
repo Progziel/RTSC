@@ -2,9 +2,11 @@ import 'package:boxing/classes/custom_button.dart';
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/global_var.dart';
 import 'package:boxing/models/dashboard_models/live_matches_model.dart';
+import 'package:boxing/screens/homescreens/fighter_detail_screen.dart';
 import 'package:boxing/screens/homescreens/fightinfo.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../api/api_constant.dart';
 import '../../classes/custom_toast.dart';
@@ -27,9 +29,14 @@ class _HomescreenpageState extends State<Homescreenpage> {
 
 
   ToastMessage toastMessage = ToastMessage();
-  String imgBaseUrl = 'http://192.168.1.113:8000';
+  String imgBaseUrl = 'http://192.168.1.120:8000';
+
+  bool isDataLoaded = false; // Set to true when data is fetched
+
 
   Future<void> getLiveMatches()async{
+
+
     final response = await userController.liveMatchesData();
    try{
      if(response.status == 200){
@@ -37,12 +44,12 @@ class _HomescreenpageState extends State<Homescreenpage> {
 
        //toastMessage.showToastMessage("Ok");
        setState(() {
+         isDataLoaded = true;
 
        });
      }
    }catch(e){
      toastMessage.showToastMessage('$e');
-
      print(e);
    }
 
@@ -159,13 +166,11 @@ class _HomescreenpageState extends State<Homescreenpage> {
                           controller: _pageController,
                           itemCount: liveMatchesData.length ,
                           scrollDirection: Axis.horizontal,
-
-
                           itemBuilder: (context, index) {
                             final match = liveMatchesData[index];
                             return Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Container(
+                              child: isDataLoaded ? Container(
                                 height: 300,
                                 // width: 100,
                                 decoration: BoxDecoration(
@@ -176,32 +181,42 @@ class _HomescreenpageState extends State<Homescreenpage> {
                                     Row(
                                       children: [
                                         Expanded(
-                                          child: Container(
-                                            height: 100,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(12),
+                                          child: InkWell(
+                                            onTap:(){
+                                              Get.to(()=> FighterDetailScreen(playerId: match.matchLogPlayerID1,playerName: match.player1Name ?? "",playerImage: match.player1Image ?? "",playerWeight: match.player1WeightClass ?? ""));
+                                            },
+                                            child: Container(
+                                              height: 100,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(12),
+                                                ),
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                    '$imgBaseUrl${match.player1Image ?? '' }',
+                                                  ),fit: BoxFit.fill
+                                                )
                                               ),
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                  '$imgBaseUrl${match.t1_image ?? '' }',
-                                                ),fit: BoxFit.fill
-                                              )
                                             ),
                                           ),
                                         ),
                                         Expanded(
-                                          child: Container(
-                                            height: 100,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                  topRight: Radius.circular(12),
-                                                ),
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                      '$imgBaseUrl${match.t2_image ?? '' }',
-                                                    ),fit: BoxFit.fill
-                                                )
+                                          child: InkWell(
+                                            onTap:(){
+                                              Get.to(()=> FighterDetailScreen(playerId: match.matchLogPlayerID2,playerImage: match.player2Image ?? "",playerName: match.player2Name ?? "",playerWeight: match.player2WeightClass ?? "",));
+                                            },
+                                            child: Container(
+                                              height: 100,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.only(
+                                                    topRight: Radius.circular(12),
+                                                  ),
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(
+                                                        '$imgBaseUrl${match.player2Image ?? '' }',
+                                                      ),fit: BoxFit.fill
+                                                  )
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -216,7 +231,7 @@ class _HomescreenpageState extends State<Homescreenpage> {
                                            Expanded(
                                             child: Center(
                                               child: Text(
-                                                '${match.t1_team_name ?? ''} ${match.t1_score}',
+                                                '${match.Player1TeamName ?? ''} ${match.matchLogPlayer1Score}',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.white),
@@ -242,7 +257,7 @@ class _HomescreenpageState extends State<Homescreenpage> {
                                             child: Container(
                                               child:  Center(
                                                 child: Text(
-                                                  '${match.t2_team_name ?? ''} ${match.t2_score}',
+                                                  '${match.Player2TeamName ?? ''} ${match.matchLogPlayer2Score}',
                                                   style: TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       color: Colors.white),
@@ -274,16 +289,17 @@ class _HomescreenpageState extends State<Homescreenpage> {
                                       padding: const EdgeInsets.symmetric(horizontal: 20),
                                       child: CustomButton(
                                           buttonText: 'View Fight Info',
-                                          onTap: () =>  getLiveMatches()/*Get.to(
+                                          onTap: () =>  /*getLiveMatches()*/Get.to(
                                             ()=>
 
-                                          //  const fightinfopage(),
+                                           const fightinfopage(),
                                          //   transition: Transition.downToUp,
-                                          )*/),
+                                          )),
                                     )
                                   ],
                                 ),
-                              ),
+                              ) :
+                              ShimmerMatchCard()
                             );
                           },
                         ),
@@ -521,3 +537,19 @@ class TopContainer extends StatelessWidget {
   }
 }
 
+class ShimmerMatchCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: 300,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
+}
