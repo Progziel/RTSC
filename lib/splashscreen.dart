@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/global_var.dart';
+import 'package:boxing/screens/onboard/boarding_screens%20(1).dart';
 import 'package:boxing/screens/onboard/onboardscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer.periodic(const Duration(seconds: 3), (timer) {
-      uId != null ? Get.offAll(()=> BottomBar()) : Get.offAll(()=> OnboardScreenPage());
+      uId != null ? Get.offAll(()=> BottomBar()) : Get.offAll(()=> BoardingScreen());
 
       timer.cancel();
     });

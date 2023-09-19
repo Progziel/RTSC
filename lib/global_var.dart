@@ -1,9 +1,13 @@
 import 'package:boxing/models/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_storage/get_storage.dart';
 
 GetStorage locator = GetStorage();
 ///TODO: set getIt
+///sharedPreferencesVariables/GetStorage
+String forProfile= "profilePicture";
+String forId= "userId";
+String forUsername= "username";
+String forEmail= "email";
 
 
 // Future<UserModel?> getUserData(String uid) async {

@@ -3,6 +3,7 @@ import 'package:boxing/controller/controller.dart';
 import 'package:boxing/global_var.dart';
 import 'package:boxing/models/auth_models/logout_model.dart';
 import 'package:boxing/screens/credential/loginpage.dart';
+import 'package:boxing/screens/profile/fav_screen.dart';
 import 'package:boxing/screens/profile/updateprofile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,20 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final profilePictureLocalStorage = locator.read('profilePicture');
+  final username = locator.read('username');
+  final email = locator.read('email');
   UserController userController = Get.find<UserController>();
   ToastMessage toastMessage = ToastMessage();
+
+  @override
+  void initState() {
+    profilePictureLocalStorage;
+    username;
+    email;
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,10 +79,11 @@ class _ProfilePageState extends State<ProfilePage> {
                              decoration: BoxDecoration(
                                  color: AppAssets.primaryColor,
                                  borderRadius: BorderRadius.circular(70),
-                                 image: DecorationImage(
-                                     image: NetworkImage( profilePictureLocalStorage ??
-                                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRudDbHeW2OobhX8E9fAY-ctpUAHeTNWfaqJA&usqp=CAU')
-                                    ,fit: BoxFit.cover ),
+                                 image: profilePictureLocalStorage != null ? DecorationImage(
+                                     image: NetworkImage(profilePictureLocalStorage)
+                                    ,fit: BoxFit.cover ) : DecorationImage(image: AssetImage(
+                                   "images/person.png"
+                                 )),
                                  )
                              ),
 
@@ -84,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               children: [
                                 Text(
-                                  "Alex Nick",
+                                  username ?? "Unknown",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -95,7 +109,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             Row(
                               children: [
                                 Text(
-                                  "AlexNick@gmail.com",
+                                  email ?? "",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -144,14 +158,19 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 10,
             ),
-            const ListTile(
-              leading: Icon(Iconsax.heart),
-              title: Text(
-                "Favourites",
-              ),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                size: 15,
+            InkWell(
+              onTap: (){
+                Get.to(()=> FavScreen());
+              },
+              child: const ListTile(
+                leading: Icon(Iconsax.heart),
+                title: Text(
+                  "Favourites",
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
               ),
             ),
             const Padding(
@@ -184,16 +203,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.black12,
               ),
             ),
-            const ListTile(
-              leading: Icon(
-                Iconsax.profile_delete,
-              ),
-              title: Text(
-                "Clear Cache",
-              ),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                size: 15,
+            InkWell(
+              onTap: (){
+                locator.remove("profilePicture");
+                toastMessage.showToastMessage("Cache clear");
+              },
+              child: const ListTile(
+                leading: Icon(
+                  Iconsax.profile_delete,
+                ),
+                title: Text(
+                  "Clear Cache",
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                ),
               ),
             ),
             InkWell(

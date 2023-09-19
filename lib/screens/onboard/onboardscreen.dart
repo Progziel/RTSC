@@ -16,40 +16,40 @@ class OnboardScreenPage extends StatefulWidget {
 class _OnboardScreenPageState extends State<OnboardScreenPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: PageView.builder(
-              itemCount: 3,
-              itemBuilder: (context, positiion) {
-                return Stack(
-                  children: [
-                    Positioned(
-                      top: -650,
-                      left: 0,
-                      right: 0,
-                      child: Transform.rotate(
-                        angle: pi / 2.5,
-                        child: Container(height: 1550, color: themecolordark),
+      body: Stack(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: PageView.builder(
+                itemCount: 3,
+                itemBuilder: (context, positiion) {
+                  return Stack(
+                    children: [
+                      Positioned(
+                        top: -650,
+                        left: 0,
+                        right: 0,
+                        child: Transform.rotate(
+                          angle: pi / 2.5,
+                          child: Container(height: 1550, color: themecolordark),
+                        ),
                       ),
-                    ),
-                    stackwidget(titlelist[positiion], valuelist[positiion],
-                        positiion, context),
-                  ],
-                );
-              }),
-        ),
-      ],
-    ));
+                      stackwidget(titlelist[positiion], valuelist[positiion],
+                          positiion, context),
+                    ],
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
   }
 
   List<String> titlelist = [
@@ -69,47 +69,32 @@ stackwidget(String title, String value, index, BuildContext context) {
   return Stack(
     clipBehavior: Clip.hardEdge,
     children: [
-      // Positioned(
-      //   bottom: 401,
-      //   left: 0,
-      //   top: 0,
-      //   right: -70,
-      //   child: Transform.rotate(
-      //     angle: pi / -10, // Rotate by 45 degrees (pi/4 radians)
-      //     child: SizedBox(
-      //       child: Image.asset(
-      //         "images/icon.png",
-      //         fit: BoxFit.contain,
-      //       ),
-      //     ),
-      //   ),
-      // ),
-
       Positioned(
-          bottom: 560,
-          left: 30,
-          right: 30,
-          child: Text(
-            "Every Fight",
-            style: GoogleFonts.bebasNeue(
-                letterSpacing: 2,
-                fontSize: 65,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          )),
+        bottom: 560,
+        left: 30,
+        right: 30,
+        child: Text(
+          "Every Fight",
+          style: GoogleFonts.bebasNeue(
+              letterSpacing: 2,
+              fontSize: 65,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
+        ),
+      ),
       Positioned(
-          bottom: 510,
-          left: 30,
-          right: 30,
-          child: Text(
-            "One Place",
-            style: GoogleFonts.bebasNeue(
-                letterSpacing: 2,
-                fontSize: 50,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xffFF0007)),
-          )),
-
+        bottom: 510,
+        left: 30,
+        right: 30,
+        child: Text(
+          "One Place",
+          style: GoogleFonts.bebasNeue(
+              letterSpacing: 2,
+              fontSize: 50,
+              fontWeight: FontWeight.bold,
+              color: const Color(0xffFF0007)),
+        ),
+      ),
       Positioned(
           bottom: index == 0
               ? 300

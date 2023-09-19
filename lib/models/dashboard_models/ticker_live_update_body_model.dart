@@ -1,26 +1,24 @@
 
 import 'package:json_annotation/json_annotation.dart';
-
-part 'live_matches_body_model.g.dart';
+part 'ticker_live_update_body_model.g.dart';
 
 @JsonSerializable()
-class LiveMatchesBodyModel {
+class LiveUpdateBodyModel {
   int? status;
   String? message;
-  List<LiveMatchesData>? data;
+  List<LiveUpdateModel>? data;
 
-  LiveMatchesBodyModel({
-    this.status,
-    this.message,
-    this.data,
-  });
 
-  factory LiveMatchesBodyModel.fromJson(Map<String, dynamic> json) => _$LiveMatchesBodyModelFromJson(json);
-  Map<String, dynamic> toJson() => _$LiveMatchesBodyModelToJson(this);
+  LiveUpdateBodyModel({this.data,this.status,this.message});
+
+  factory LiveUpdateBodyModel.fromJson(Map<String, dynamic> json) =>
+      _$LiveUpdateBodyModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LiveUpdateBodyModelToJson(this);
 }
 
 @JsonSerializable()
-class LiveMatchesData {
+class LiveUpdateModel {
   int? matchLogId;
   String? matchLogCategoriesID;
   int? matchLogPlayerID1;
@@ -37,7 +35,7 @@ class LiveMatchesData {
   String? player1CountryName;
   String? player1CountryFlag;
   String? player1Image;
-  String? Player1TeamName;
+  String? player1TeamName;
   String? player2Name;
   String? player2WeightClass;
   String? player2CountryName;
@@ -47,12 +45,10 @@ class LiveMatchesData {
   String? VenuesName;
   String? VenuesLocation;
   String? VenuesCapacity;
-  String? Player1Height;
-  String? Player2Height;
-  String? Player1Age;
-  String? Player2Age;
+  int? update_id;
+  String? update_text;
 
-  LiveMatchesData(
+  LiveUpdateModel(
       {this.matchLogId,
         this.matchLogCategoriesID,
         this.matchLogPlayerID1,
@@ -69,18 +65,21 @@ class LiveMatchesData {
         this.player1CountryName,
         this.player1CountryFlag,
         this.player1Image,
-        this.Player1TeamName,
+        this.player1TeamName,
         this.player2Name,
         this.player2WeightClass,
         this.player2CountryName,
         this.player2CountryFlag,
         this.player2Image,
         this.Player2TeamName,
-        this.VenuesName,
         this.VenuesLocation,
-        this.VenuesCapacity});
+        this.VenuesName,
+        this.VenuesCapacity,
+        this.update_text,
+        this.update_id});
 
-  factory LiveMatchesData.fromJson(Map<String, dynamic> json) => _$LiveMatchesDataFromJson(json);
-  Map<String, dynamic> toJson() => _$LiveMatchesDataToJson(this);
+  factory LiveUpdateModel.fromJson(Map<String, dynamic> json) =>
+      _$LiveUpdateModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LiveUpdateModelToJson(this);
 }
-

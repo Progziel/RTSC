@@ -52,7 +52,11 @@ LiveMatchesData _$LiveMatchesDataFromJson(Map<String, dynamic> json) =>
       VenuesName: json['VenuesName'] as String?,
       VenuesLocation: json['VenuesLocation'] as String?,
       VenuesCapacity: json['VenuesCapacity'] as String?,
-    );
+    )
+      ..Player1Height = json['Player1Height'] as String?
+      ..Player2Height = json['Player2Height'] as String?
+      ..Player1Age = json['Player1Age'] as String?
+      ..Player2Age = json['Player2Age'] as String?;
 
 Map<String, dynamic> _$LiveMatchesDataToJson(LiveMatchesData instance) =>
     <String, dynamic>{
@@ -82,4 +86,8 @@ Map<String, dynamic> _$LiveMatchesDataToJson(LiveMatchesData instance) =>
       'VenuesName': instance.VenuesName,
       'VenuesLocation': instance.VenuesLocation,
       'VenuesCapacity': instance.VenuesCapacity,
+      'Player1Height': instance.Player1Height,
+      'Player2Height': instance.Player2Height,
+      'Player1Age': instance.Player1Age,
+      'Player2Age': instance.Player2Age,
     };

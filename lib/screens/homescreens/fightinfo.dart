@@ -1,14 +1,23 @@
+import 'package:boxing/classes/custom_text.dart';
 import 'package:boxing/constants/colors.dart';
+import 'package:boxing/models/dashboard_models/all_matches_body_model.dart';
+import 'package:boxing/models/dashboard_models/live_matches_body_model.dart';
 import 'package:flutter/material.dart';
 
 class fightinfopage extends StatefulWidget {
-  const fightinfopage({super.key});
+  final AllMatchesModel? allMatchesModel;
+  final  LiveMatchesData? liveMatch;
+  final bool allMatchApi;
+  const fightinfopage(
+      {super.key, this.allMatchesModel, required this.allMatchApi,this.liveMatch,  });
 
   @override
   State<fightinfopage> createState() => _fightinfopageState();
 }
 
 class _fightinfopageState extends State<fightinfopage> {
+  String imgBaseUrl = 'http://192.168.1.120:8000';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +34,7 @@ class _fightinfopageState extends State<fightinfopage> {
               )),
           backgroundColor: themecolordark,
           title: const Text(
-            "Fight Info",
+            "Fight Information",
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -42,26 +51,27 @@ class _fightinfopageState extends State<fightinfopage> {
                     borderRadius: BorderRadius.circular(12)),
                 child: Column(
                   children: [
-                    Row(
+                   widget.allMatchApi == true ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const SizedBox(
                           width: 20,
                         ),
-                        const Text(
-                          "Martin Vs Harutyunyan",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                          ),
+                        CustomTextWidget(
+                          text: "${widget.allMatchesModel?.player1Name}",
+                        ),
+                        CustomTextWidget(
+                            text: "V/S", textColor: AppAssets.primaryColor,fontSize: 17),
+                        CustomTextWidget(
+                          text: "${widget.allMatchesModel?.player2Name}",
                         ),
                         MaterialButton(
                           onPressed: () {},
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
-                              height: 40,
-                              width: 130,
+                              padding: EdgeInsets.only(
+                                  left: 10, bottom: 5, top: 5, right: 10),
                               decoration: BoxDecoration(
                                   color: themecolordark,
                                   borderRadius: BorderRadius.circular(20)),
@@ -82,8 +92,50 @@ class _fightinfopageState extends State<fightinfopage> {
                           ),
                         )
                       ],
-                    ),
-                    Stack(
+                    ) :
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       const SizedBox(
+                         width: 20,
+                       ),
+                       CustomTextWidget(
+                         text: "${widget.liveMatch?.player1Name}",
+                       ),
+                       CustomTextWidget(
+                           text: "V/S", textColor: AppAssets.primaryColor,fontSize: 17),
+                       CustomTextWidget(
+                         text: "${widget.liveMatch?.player2Name}",
+                       ),
+                       MaterialButton(
+                         onPressed: () {},
+                         child: Padding(
+                           padding: const EdgeInsets.all(8.0),
+                           child: Container(
+                             padding: EdgeInsets.only(
+                                 left: 10, bottom: 5, top: 5, right: 10),
+                             decoration: BoxDecoration(
+                                 color: themecolordark,
+                                 borderRadius: BorderRadius.circular(20)),
+                             child: const Row(
+                               mainAxisAlignment: MainAxisAlignment.center,
+                               children: [
+                                 Icon(
+                                   Icons.notifications,
+                                   color: Colors.white,
+                                 ),
+                                 Text(
+                                   "Notifications",
+                                   style: TextStyle(color: Colors.white),
+                                 )
+                               ],
+                             ),
+                           ),
+                         ),
+                       )
+                     ],
+                   ),
+                    widget.allMatchApi == true ? Stack(
                       children: [
                         Container(
                           child: Row(
@@ -92,16 +144,40 @@ class _fightinfopageState extends State<fightinfopage> {
                                 height: 150,
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: Image.network(
-                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPq6Ztl1bJiNoIpsi6uPk-DXiL-hAZENN0gw&usqp=CAU",
-                                  fit: BoxFit.cover,
+"$imgBaseUrl${widget.allMatchesModel?.player1Image}",                                  fit: BoxFit.cover,
                                 ),
                               ),
                               SizedBox(
                                 height: 150,
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: Image.network(
-                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnV-qX1YKy9QTe8jrsEidPHwXeVVkkezVlMw&usqp=CAU",
-                                  fit: BoxFit.fill,
+                                  "$imgBaseUrl${widget.allMatchesModel?.player2Image}",                                  fit: BoxFit.cover,
+
+
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ) : Stack(
+                      children: [
+                        Container(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 150,
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Image.network(
+                                  "$imgBaseUrl${widget.liveMatch?.player1Image}",                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 150,
+                                width: MediaQuery.of(context).size.width / 2,
+                                child: Image.network(
+                                  "$imgBaseUrl${widget.liveMatch?.player2Image}",                                  fit: BoxFit.cover,
+
                                 ),
                               )
                             ],
@@ -116,9 +192,9 @@ class _fightinfopageState extends State<fightinfopage> {
                         children: [
                           Expanded(
                             child: Container(
-                              child: const Center(
+                              child:  Center(
                                 child: Text(
-                                  "17-0-0",
+                                  widget.allMatchApi == true ? widget.allMatchesModel?.matchLogPlayer1Score ?? "" : widget.liveMatch?.matchLogPlayer1Score ?? "" ,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
@@ -145,9 +221,9 @@ class _fightinfopageState extends State<fightinfopage> {
                           ),
                           Expanded(
                             child: Container(
-                              child: const Center(
+                              child:  Center(
                                 child: Text(
-                                  "17-0-0",
+                                  widget.allMatchApi == true ?  widget.allMatchesModel?.matchLogPlayer2Score ?? "" : widget.liveMatch?.matchLogPlayer2Score ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
@@ -162,17 +238,17 @@ class _fightinfopageState extends State<fightinfopage> {
                       height: 10,
                     ),
                     Text(
-                      "Saturday July 15,2023",
+                      widget.allMatchApi == true ? widget.allMatchesModel?.date ?? "" : widget.liveMatch?.date ?? "",
                       style: TextStyle(
                           color: themecolordark, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "Estimated Ringkwak : Sunday",
+                      widget.allMatchApi == true ? "Estimated Ringkwak : ${widget.allMatchesModel?.day ?? ""}" : "Estimated Ringkwak : ${widget.liveMatch?.day ?? ""}",
                       style: TextStyle(
                           color: themecolordark, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "8:30 PM (Asia/Karachi)",
+                      widget.allMatchApi == true ? "${widget.allMatchesModel?.time ?? ""}" : "${widget.liveMatch?.time ?? ""}",
                       style: TextStyle(
                           color: themecolordark, fontWeight: FontWeight.bold),
                     ),
@@ -182,52 +258,7 @@ class _fightinfopageState extends State<fightinfopage> {
                   ],
                 ),
               ),
-              Stack(
-                children: [
-                  Container(
-                    child: Image.network(
-                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMK69dbcOWdJS--e-mc_8oHZYGaTb53DRIwA&usqp=CAU"),
-                  ),
-                  Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 20,
-                          width: 150,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white),
-                          child: const Center(
-                            child: Text(
-                              "Press Conference",
-                              style: TextStyle(
-                                  color: Color(0xffFF0007),
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      )),
-                  Positioned(
-                      top: 0,
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 20,
-                          width: 150,
-                          child: Center(
-                              child: CircleAvatar(
-                            backgroundColor: Colors.grey[200],
-                            child: const Icon(Icons.play_arrow),
-                          )),
-                        ),
-                      ))
-                ],
-              ),
+
               Divider(
                 color: Colors.grey[300],
               ),
@@ -241,7 +272,7 @@ class _fightinfopageState extends State<fightinfopage> {
                       itemCount: tablist.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        int newindex = index - 1;
+                        int newindex = index ;
                         return GestureDetector(
                           onTap: () {
                             setState(() {
@@ -414,13 +445,13 @@ class _fightinfopageState extends State<fightinfopage> {
                                           color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(12)),
-                                      child: const ListTile(
+                                      child:  ListTile(
                                         subtitle: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("39"),
-                                            Text("39"),
+                                            widget.allMatchApi == true ? Text(widget.allMatchesModel?.Player1Age ?? "") : Text(widget.liveMatch?.Player1Age ?? ""),
+                                            widget.allMatchApi == true ? Text(widget.allMatchesModel?.Player2Age ?? "") : Text(widget.liveMatch?.Player2Age ?? ""),
                                           ],
                                         ),
                                         title: Row(
@@ -435,6 +466,7 @@ class _fightinfopageState extends State<fightinfopage> {
                                       ),
                                     ),
                                   ),
+
                             pageindx != 0
                                 ? Container()
                                 : Padding(
@@ -445,44 +477,14 @@ class _fightinfopageState extends State<fightinfopage> {
                                           color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(12)),
-                                      child: const ListTile(
+                                      child:  ListTile(
                                         subtitle: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text("68.9' / 1755cm"),
-                                            Text("68.9' / 1755cm"),
-                                          ],
-                                        ),
-                                        title: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Reach ",
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                            pageindx != 0
-                                ? Container()
-                                : Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, right: 12, top: 10),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      child: const ListTile(
-                                        subtitle: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("68.9' / 1755cm"),
-                                            Text("68.9' / 1755cm"),
+                                            widget.allMatchApi == true ? Text(widget.allMatchesModel?.Player1Height ?? "") : Text(widget.liveMatch?.Player1Height ?? ""),
+                                            widget.allMatchApi == true ? Text(widget.allMatchesModel?.Player2Height ?? "") : Text(widget.liveMatch?.Player2Height ?? ""),
+
                                           ],
                                         ),
                                         title: Row(
@@ -497,45 +499,21 @@ class _fightinfopageState extends State<fightinfopage> {
                                       ),
                                     ),
                                   ),
+
                             pageindx != 0
                                 ? Container()
-                                : Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 12, right: 12, top: 10),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      child: const ListTile(
-                                        subtitle: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("Orthodox"),
-                                            Text("Orthodox"),
-                                          ],
-                                        ),
-                                        title: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Stance ",
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                            pageindx != 0
-                                ? Container()
-                                : const Row(
+                                :  Row(
                                     children: [
                                       Padding(
                                         padding: EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "when is martin VS Harutyunyan?",
+                                        child:  widget.allMatchApi == true ? Text(
+                                          "What is ${widget.allMatchesModel?.player1Name ?? ""} VS ${widget.allMatchesModel?.player1Name ?? ""}?",
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ) : Text(
+                                          "What is ${widget.liveMatch?.player1Name ?? ""} VS ${widget.liveMatch?.player1Name ?? ""}?",
                                           style: TextStyle(
                                               color: Colors.red,
                                               fontWeight: FontWeight.bold,
@@ -618,14 +596,14 @@ class _fightinfopageState extends State<fightinfopage> {
                                                 color: Colors.white,
                                                 borderRadius:
                                                     BorderRadius.circular(12)),
-                                            child: const ListTile(
+                                            child:  ListTile(
                                               subtitle: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
-                                                  Text("39"),
-                                                  Text("39"),
+                                                  widget.allMatchApi == true ? Text(widget.allMatchesModel?.Player1Age ?? "") : Text(widget.liveMatch?.Player1Age ?? ""),
+                                                  widget.allMatchApi == true ? Text(widget.allMatchesModel?.Player2Age ?? "") : Text(widget.liveMatch?.Player2Age ?? ""),
                                                 ],
                                               ),
                                               title: Row(
@@ -1172,9 +1150,8 @@ class _fightinfopageState extends State<fightinfopage> {
     );
   }
 
-  int pageindx = -1;
+  int pageindx = 0;
   List<String> tablist = [
-    "Credentials",
     "About",
     "Compubox",
     "Scorecard",

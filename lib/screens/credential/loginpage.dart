@@ -149,7 +149,6 @@ class _LoginPageState extends State<LoginPage> {
                       if(res.status == 200){
                         toastMessage.showToastMessage(res.message ?? "");
                         await locator.write('userId', res.id);
-
                         Get.to(()=> TermsandConditions());
                       }
                       else if(res.status == 401){

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:boxing/models/dashboard_models/fighter_detail_body_model.dart';
 import 'package:boxing/models/dashboard_models/fighter_detail_model.dart';
+import 'package:boxing/models/dashboard_models/get_notification_body_model.dart';
 import 'package:boxing/models/profile/update_profile_model.dart';
 import 'package:dio/dio.dart';
 
@@ -12,10 +13,12 @@ import '../models/auth_models/login_model.dart';
 import '../models/auth_models/logout_body_model.dart';
 import '../models/auth_models/signup_body_model.dart';
 import '../models/auth_models/signup_model.dart';
+import '../models/dashboard_models/all_matches_body_model.dart';
 import '../models/dashboard_models/latest_news_body_model.dart';
 import '../models/dashboard_models/live_matches_body_model.dart';
 import '../models/dashboard_models/search_filter_body_model.dart';
 import '../models/dashboard_models/search_filter_model.dart';
+import '../models/dashboard_models/ticker_live_update_body_model.dart';
 import '../models/profile/get_profile_model.dart';
 import '../models/profile/set_profile_image_body_model.dart';
 import '../models/profile/update_profile_body_model.dart';
@@ -50,12 +53,13 @@ abstract class AuthApi {
 @POST('/profile_edit')
   Future<UpdateProfileBodyModel> updateProfile(@Body() UpdateProfileModel updateProfileModel);
 
+///2ndtab
 @POST('/livematchessearch')
   Future<SearchFilerBodyModel> searchFilter (@Body() SearchFilterModel searchFilterModel);
 
 
   @POST('/imageupload')
-  Future<SetProfileImageBodyModel> setProfileImage (@Part() File file);
+  Future<SetProfileImageBodyModel> setProfileImage (@Part() File image);
 
   @GET('/latestnewsview')
   Future<LatestNewsBodyModel> getLatestNews();
@@ -64,6 +68,18 @@ abstract class AuthApi {
   @POST('/fighterprofilesview')
   Future<FighterDetailBodyModel> fighterDetail(@Body() FighterDetailModel fighterDetailModel);
 
+
+  ///notification
+  @GET('/notificationsview')
+  Future<GetNotificationBodyModel> getNotification();
+
+  ///ticker
+  @GET('/liveupdates')
+  Future<LiveUpdateBodyModel> liveUpdate();
+
+  ///all matches list
+  @GET('/matchlogview')
+  Future<AllMatchesBodyModel> allMatches();
 
 // @POST('/users/resend-otp')
   // Future<dynamic> resendOtp(@Body() ResendOtpModel resendOtpModel);

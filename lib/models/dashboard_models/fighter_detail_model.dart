@@ -5,11 +5,11 @@ part 'fighter_detail_model.g.dart';
 
 @JsonSerializable()
 class FighterDetailModel {
-int? matchLogPlayerID;
+int? matchLogPlayerId;
 
 
 FighterDetailModel({
-this.matchLogPlayerID
+this.matchLogPlayerId
   });
 
   factory FighterDetailModel.fromJson(Map<String, dynamic> json) => _$FighterDetailModelFromJson(json);

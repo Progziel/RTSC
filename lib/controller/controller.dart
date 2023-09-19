@@ -1,6 +1,9 @@
 
+import 'dart:collection';
+
 import 'package:boxing/models/dashboard_models/fighter_detail_body_model.dart';
 import 'package:boxing/models/dashboard_models/fighter_detail_model.dart';
+import 'package:boxing/models/dashboard_models/get_notification_body_model.dart';
 import 'package:boxing/models/dashboard_models/search_filter_body_model.dart';
 import 'package:boxing/models/dashboard_models/search_filter_model.dart';
 import 'package:boxing/models/profile/update_profile_model.dart';
@@ -18,8 +21,10 @@ import '../models/auth_models/logout_body_model.dart';
 import '../models/auth_models/logout_model.dart';
 import '../models/auth_models/signup_body_model.dart';
 import '../models/auth_models/signup_model.dart';
+import '../models/dashboard_models/all_matches_body_model.dart';
 import '../models/dashboard_models/latest_news_body_model.dart';
 import '../models/dashboard_models/live_matches_body_model.dart';
+import '../models/dashboard_models/ticker_live_update_body_model.dart';
 import '../models/profile/get_profile_model.dart';
 import '../models/profile/set_profile_image_body_model.dart';
 import '../models/profile/update_profile_body_model.dart';
@@ -29,6 +34,26 @@ class UserController extends GetxController {
   RxBool loading = false.obs;
   RxBool showCategories = true.obs;
   Rx<XFile?> image = Rx<XFile?>(null);
+
+  ///---wishlist
+  RxBool selectedMatch = false.obs;
+
+
+  final _items = <AllMatchesModel>[].obs;
+  List<AllMatchesModel> get items => _items;
+
+  void addToWishList(AllMatchesModel allMatch) {
+    _items.add(allMatch);
+  }
+
+  void removeFromWishList(AllMatchesModel product) {
+    _items.remove(product);
+  }
+
+  bool isFavorite(AllMatchesModel match) {
+    return _items.contains(match);
+  }
+  ///----
 
 
   final authApi = AuthApi(dio, baseUrl: ApiConstants.baseUrl);
@@ -58,6 +83,11 @@ class UserController extends GetxController {
     return value;
   }
 
+  Future<AllMatchesBodyModel> allMatches() async {
+    final value = await authApi.allMatches();
+    return value;
+  }
+
   ///profile
   Future<GetProfileBodyModel> getProfile()async{
     final value = await authApi.getProfile();
@@ -69,8 +99,8 @@ class UserController extends GetxController {
     return res;
   }
 
-  Future<SetProfileImageBodyModel> setProfileImage(file) async {
-   final value = await authApi.setProfileImage(file);
+  Future<SetProfileImageBodyModel> setProfileImage(image) async {
+   final value = await authApi.setProfileImage(image);
     return value;
   }
 
@@ -89,6 +119,18 @@ class UserController extends GetxController {
   Future<FighterDetailBodyModel> fighterDetail(FighterDetailModel fighterDetailModel)async{
     final res = await authApi.fighterDetail(fighterDetailModel);
     return res;
+  }
+
+  ///---Notification
+  Future<GetNotificationBodyModel> getNotification()async{
+    final value = await authApi.getNotification();
+    return value;
+  }
+
+  ///ticker
+  Future<LiveUpdateBodyModel> liveUpdate()async{
+    final value = await authApi.liveUpdate();
+    return value;
   }
 
 }

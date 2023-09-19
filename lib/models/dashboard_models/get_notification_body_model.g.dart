@@ -1,31 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_filter_body_model.dart';
+part of 'get_notification_body_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-SearchFilerBodyModel _$SearchFilerBodyModelFromJson(
+GetNotificationBodyModel _$GetNotificationBodyModelFromJson(
         Map<String, dynamic> json) =>
-    SearchFilerBodyModel(
-      message: json['message'] as String?,
+    GetNotificationBodyModel(
       status: json['status'] as int?,
+      date: json['date'] as String?,
       data: (json['data'] as List<dynamic>?)
-          ?.map((e) => SearchListData.fromJson(e as Map<String, dynamic>))
+          ?.map(
+              (e) => NotificationDataModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      message: json['message'] as String?,
     );
 
-Map<String, dynamic> _$SearchFilerBodyModelToJson(
-        SearchFilerBodyModel instance) =>
+Map<String, dynamic> _$GetNotificationBodyModelToJson(
+        GetNotificationBodyModel instance) =>
     <String, dynamic>{
       'status': instance.status,
       'message': instance.message,
+      'date': instance.date,
       'data': instance.data,
     };
 
-SearchListData _$SearchListDataFromJson(Map<String, dynamic> json) =>
-    SearchListData(
+NotificationDataModel _$NotificationDataModelFromJson(
+        Map<String, dynamic> json) =>
+    NotificationDataModel(
       matchLogId: json['matchLogId'] as int?,
       matchLogCategoriesID: json['matchLogCategoriesID'] as String?,
       matchLogPlayerID1: json['matchLogPlayerID1'] as int?,
@@ -42,19 +46,20 @@ SearchListData _$SearchListDataFromJson(Map<String, dynamic> json) =>
       player1CountryName: json['player1CountryName'] as String?,
       player1CountryFlag: json['player1CountryFlag'] as String?,
       player1Image: json['player1Image'] as String?,
-      Player1TeamName: json['Player1TeamName'] as String?,
+      player1TeamName: json['player1TeamName'] as String?,
       player2Name: json['player2Name'] as String?,
       player2WeightClass: json['player2WeightClass'] as String?,
       player2CountryName: json['player2CountryName'] as String?,
       player2CountryFlag: json['player2CountryFlag'] as String?,
       player2Image: json['player2Image'] as String?,
       Player2TeamName: json['Player2TeamName'] as String?,
-      VenuesCapacity: json['VenuesCapacity'] as String?,
       VenuesName: json['VenuesName'] as String?,
       VenuesLocation: json['VenuesLocation'] as String?,
+      VenuesCapacity: json['VenuesCapacity'] as String?,
     );
 
-Map<String, dynamic> _$SearchListDataToJson(SearchListData instance) =>
+Map<String, dynamic> _$NotificationDataModelToJson(
+        NotificationDataModel instance) =>
     <String, dynamic>{
       'matchLogId': instance.matchLogId,
       'matchLogCategoriesID': instance.matchLogCategoriesID,
@@ -72,7 +77,7 @@ Map<String, dynamic> _$SearchListDataToJson(SearchListData instance) =>
       'player1CountryName': instance.player1CountryName,
       'player1CountryFlag': instance.player1CountryFlag,
       'player1Image': instance.player1Image,
-      'Player1TeamName': instance.Player1TeamName,
+      'player1TeamName': instance.player1TeamName,
       'player2Name': instance.player2Name,
       'player2WeightClass': instance.player2WeightClass,
       'player2CountryName': instance.player2CountryName,

@@ -129,7 +129,8 @@ class _UserInformationState extends State<UserInformation> {
                       if(res.status == 200){
                         toastMessage.showToastMessage(res.message ?? "");
                         await locator.write('userId', res.data?.id);
-
+                        await locator.write('username', res.data?.name);
+                        await locator.write('email', res.data?.email);
                         Get.to(()=> TermsandConditions());
                       }
                       else if(res.message == 401){

@@ -8,10 +8,10 @@ part of 'fighter_detail_model.dart';
 
 FighterDetailModel _$FighterDetailModelFromJson(Map<String, dynamic> json) =>
     FighterDetailModel(
-      matchLogPlayerID: json['matchLogPlayerID'] as int?,
+      matchLogPlayerId: json['matchLogPlayerId'] as int?,
     );
 
 Map<String, dynamic> _$FighterDetailModelToJson(FighterDetailModel instance) =>
     <String, dynamic>{
-      'matchLogPlayerID': instance.matchLogPlayerID,
+      'matchLogPlayerId': instance.matchLogPlayerId,
     };

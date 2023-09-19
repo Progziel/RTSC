@@ -186,16 +186,16 @@ class _AuthApi implements AuthApi {
   }
 
   @override
-  Future<SetProfileImageBodyModel> setProfileImage(file) async {
+  Future<SetProfileImageBodyModel> setProfileImage(image) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = FormData();
     _data.files.add(MapEntry(
-      'file',
+      'image',
       MultipartFile.fromFileSync(
-        file.path,
-        filename: file.path.split(Platform.pathSeparator).last,
+        image.path,
+        filename: image.path.split(Platform.pathSeparator).last,
       ),
     ));
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -259,6 +259,75 @@ class _AuthApi implements AuthApi {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = FighterDetailBodyModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetNotificationBodyModel> getNotification() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GetNotificationBodyModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/notificationsview',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetNotificationBodyModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<LiveUpdateBodyModel> liveUpdate() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<LiveUpdateBodyModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/liveupdates',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = LiveUpdateBodyModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<AllMatchesBodyModel> allMatches() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<AllMatchesBodyModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/matchlogview',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = AllMatchesBodyModel.fromJson(_result.data!);
     return value;
   }
 

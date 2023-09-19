@@ -1,31 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_filter_body_model.dart';
+part of 'all_matches_body_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-SearchFilerBodyModel _$SearchFilerBodyModelFromJson(
-        Map<String, dynamic> json) =>
-    SearchFilerBodyModel(
-      message: json['message'] as String?,
+AllMatchesBodyModel _$AllMatchesBodyModelFromJson(Map<String, dynamic> json) =>
+    AllMatchesBodyModel(
       status: json['status'] as int?,
+      message: json['message'] as String?,
       data: (json['data'] as List<dynamic>?)
-          ?.map((e) => SearchListData.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => AllMatchesModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$SearchFilerBodyModelToJson(
-        SearchFilerBodyModel instance) =>
+Map<String, dynamic> _$AllMatchesBodyModelToJson(
+        AllMatchesBodyModel instance) =>
     <String, dynamic>{
       'status': instance.status,
       'message': instance.message,
       'data': instance.data,
     };
 
-SearchListData _$SearchListDataFromJson(Map<String, dynamic> json) =>
-    SearchListData(
+AllMatchesModel _$AllMatchesModelFromJson(Map<String, dynamic> json) =>
+    AllMatchesModel(
       matchLogId: json['matchLogId'] as int?,
       matchLogCategoriesID: json['matchLogCategoriesID'] as String?,
       matchLogPlayerID1: json['matchLogPlayerID1'] as int?,
@@ -49,12 +48,16 @@ SearchListData _$SearchListDataFromJson(Map<String, dynamic> json) =>
       player2CountryFlag: json['player2CountryFlag'] as String?,
       player2Image: json['player2Image'] as String?,
       Player2TeamName: json['Player2TeamName'] as String?,
-      VenuesCapacity: json['VenuesCapacity'] as String?,
       VenuesName: json['VenuesName'] as String?,
       VenuesLocation: json['VenuesLocation'] as String?,
+      VenuesCapacity: json['VenuesCapacity'] as String?,
+      Player1Age: json['Player1Age'] as String?,
+      Player1Height: json['Player1Height'] as String?,
+      Player2Age: json['Player2Age'] as String?,
+      Player2Height: json['Player2Height'] as String?,
     );
 
-Map<String, dynamic> _$SearchListDataToJson(SearchListData instance) =>
+Map<String, dynamic> _$AllMatchesModelToJson(AllMatchesModel instance) =>
     <String, dynamic>{
       'matchLogId': instance.matchLogId,
       'matchLogCategoriesID': instance.matchLogCategoriesID,
@@ -72,12 +75,16 @@ Map<String, dynamic> _$SearchListDataToJson(SearchListData instance) =>
       'player1CountryName': instance.player1CountryName,
       'player1CountryFlag': instance.player1CountryFlag,
       'player1Image': instance.player1Image,
-      'Player1TeamName': instance.Player1TeamName,
       'player2Name': instance.player2Name,
       'player2WeightClass': instance.player2WeightClass,
       'player2CountryName': instance.player2CountryName,
       'player2CountryFlag': instance.player2CountryFlag,
       'player2Image': instance.player2Image,
+      'Player1Age': instance.Player1Age,
+      'Player2Age': instance.Player2Age,
+      'Player1Height': instance.Player1Height,
+      'Player2Height': instance.Player2Height,
+      'Player1TeamName': instance.Player1TeamName,
       'Player2TeamName': instance.Player2TeamName,
       'VenuesName': instance.VenuesName,
       'VenuesLocation': instance.VenuesLocation,

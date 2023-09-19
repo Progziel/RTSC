@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:boxing/classes/custom_button.dart';
 import 'package:boxing/classes/custom_text.dart';
 import 'package:boxing/classes/custom_textfield.dart';
@@ -7,13 +6,9 @@ import 'package:boxing/classes/custom_toast.dart';
 import 'package:boxing/constants/colors.dart';
 import 'package:boxing/controller/controller.dart';
 import 'package:boxing/global_var.dart';
-import 'package:boxing/models/profile/get_profile_model.dart';
 import 'package:boxing/models/profile/set_profile_image_body_model.dart';
 import 'package:boxing/models/profile/update_profile_model.dart';
 import 'package:boxing/models/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -39,7 +34,6 @@ class _UpdateProfileState extends State<UpdateProfile> {
   UserController userController = Get.find<UserController>();
   final profilePictureLocalStorage = locator.read('profilePicture');
   String imgBaseUrl = 'http://192.168.1.120:8000';
-
   String? getImage;
 
   Future<void> getData() async {
@@ -47,14 +41,19 @@ class _UpdateProfileState extends State<UpdateProfile> {
     try {
       if (res.status == 200) {
         getImage = res.user?.image ?? "";
-        fnameController =
-            TextEditingController(text: "${res.user?.first_name}");
+        // await locator.write("profilePicture", "$imgBaseUrl${res.user?.image ?? ""}");
+        fnameController = TextEditingController(text: "${res.user?.first_name}");
         lnameController = TextEditingController(text: res.user?.last_name);
         phoneController = TextEditingController(text: res.user?.phone);
         emailController = TextEditingController(text: res.user?.email);
         addressController = TextEditingController(text: res.user?.address);
         //addressController = TextEditingController(text: res.data!.address);
         userController.loading.value = false;
+        await locator.write('username', "${res.user?.first_name}${res.user?.last_name}");
+        await locator.write('email', res.user?.email);
+        await locator.write("profilePicture", "$imgBaseUrl${res.user?.image ?? ""}");
+
+        //  await locator.write('profilePicture', "$imgBaseUrl${res.user?.image}");
         setState(() {});
       } else {
         userController.loading.value = true;
@@ -76,6 +75,11 @@ class _UpdateProfileState extends State<UpdateProfile> {
       );
       try {
         if (value.status == 200) {
+
+       //   await locator.write('profilePicture', getImage);
+        //  await locator.write('profilePicture', "$imgBaseUrl$getImage");
+
+
           toastMessage.showToastMessage(value.message ?? "");
         } else {
           toastMessage.showToastMessage(value.message ?? "");
@@ -184,10 +188,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
                try{
                  if(res.status == 200){
                    toastMessage.showToastMessage(res.message ?? "");
+
                  }
                  else{
                    toastMessage.showToastMessage(res.message ?? "");
-
                  }
                }catch(e){
                  toastMessage.showToastMessage('Something went wrong');
@@ -365,7 +369,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 ),
                 fit: BoxFit.cover,
               )));
-    } else if (getImage != null) {
+    } else if (getImage?.isNotEmpty ?? true) {
       return Container(
         height: 100,
         width: 100,
@@ -377,7 +381,19 @@ class _UpdateProfileState extends State<UpdateProfile> {
                 ),
                 fit: BoxFit.cover)),
       );
-    } else {
+    } /*else if(profilePictureLocalStorage != null){
+      return Container(
+        height: 100,
+        width: 100,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            image: DecorationImage(
+                image: AssetImage(
+                  profilePictureLocalStorage,
+                ),
+                fit: BoxFit.cover)),
+      );
+    }*/else {
       return Container(
           width: 100,
           height: 100,
@@ -385,7 +401,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
               borderRadius: BorderRadius.circular(50),
               image: const DecorationImage(
                   image: AssetImage(
-                    'assets/icons/user.png',
+                    "images/person.png",
                   ),
                   fit: BoxFit.cover)));
     }
